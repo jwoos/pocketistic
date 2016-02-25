@@ -1,0 +1,22 @@
+{
+  "name": "pocketistics",
+  "description": "Pocket stats",
+  "main": "index.html",
+  "authors": [
+    "jwoos"
+  ],
+  "license": "MIT License",
+  "keywords": [
+    "gulp"
+  ],
+  "homepage": "https://github.com/jwoos/web_pocketistic",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
