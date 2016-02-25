@@ -1,99 +1,159 @@
 var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
-var reload = browserSync.reload;
+
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
-var sourcemaps = require('gulp-sourcemaps');
-var sass = require('gulp-sass');
-var csslint = require('gulp-csslint');
-var autoPrefixer = require('gulp-autoprefixer');
-//if node version is lower than v.0.1.2
-require('es6-promise').polyfill();
-var cssComb = require('gulp-csscomb');
-var cmq = require('gulp-merge-media-queries');
-var minifyCss = require('gulp-minify-css');
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
+var del = require('del');
 var jade = require('gulp-jade');
-var imageMin = require('gulp-imagemin');
-var cache = require('gulp-cache');
-var notify = require('gulp-notify');
-gulp.task('sass', function(){
-	gulp.src(['src/styles/**/*.sass'])
-		.pipe(plumber({
-			handleError: function (err) {
-				console.log(err);
-				this.emit('end');
-			}
+var jaded = require('jade');
+var sass = require('gulp-sass');
+var sourceMap = require('gulp-sourcemaps');
+var autoprefixer = require('gulp-autoprefixer');
+var csslint = require('gulp-csslint');
+var jshint = require('gulp-jshint');
+var stylish = require('jshint-stylish');
+var imagemin = require('gulp-imagemin');
+var browserSync = require('browser-sync');
+
+gulp.task('clean:srv', function() {
+	return del(['.tmp/**/*']);
+});
+
+gulp.task('clean:dist', function() {
+	return del(['dist/**/*']);
+});
+
+gulp.task('jade:srv', function() {
+	return gulp.src('src/*.jade')
+		.pipe(plumber())
+		.pipe(jade({
+			pretty: '\t',
+			jade: jaded
 		}))
-		.pipe(sourcemaps.init())
-		.pipe(sass())
-		.pipe(autoPrefixer())
-		.pipe(cssComb())
-		.pipe(cmq({log:true}))
+		.pipe(gulp.dest('.tmp/'))
+		.pipe(browserSync.reload());
+});
+
+gulp.task('jade:dist', function() {
+	return gulp.src('src/*.jade')
+		.pipe(plumber())
+		.pipe(jade({
+			jade: jaded
+		}))
+		.pipe(gulp.dest('dist/'));
+});
+
+gulp.task('html:srv', function() {
+	return gulp.src('src/*.html')
+		.pipe(plumber())
+		.pipe(gulp.dest('.tmp/'));
+});
+
+gulp.task('html:dist', function() {
+	return gulp.src('src/*.html')
+		.pipe(plumber())
+		.pipe(gulp.dest('dist/'));
+});
+
+gulp.task('sass:srv', function() {
+	return gulp.src('src/styles/**/*.sass')
+		.pipe(plumber())
+		.pipe(sourceMap.init())
+		.pipe(sass({
+			indentedSyntax: true,
+			indentType: 'tab',
+			sourceComments: true
+		}))
 		.pipe(csslint())
 		.pipe(csslint.reporter())
-		.pipe(gulp.dest('dist/styles'))
+		.pipe(autoprefixer())
+		.pipe(gulp.dest('.tmp/styles/'))
+		.pipe(sourceMap.write('.tmp/styles/'))
+		.pipe(browserSync.stream());
+});
+
+gulp.task('sass:dist', function() {
+	return gulp.src('src/styles/**/*.sass')
+		.pipe(plumber())
+		.pipe(sass({
+			indentedSyntax: true,
+			indentType: 'tab',
+			outputStyle: 'compressed'
+		}).on('error', sass.logError()))
+		.pipe(csslint())
+		.pipe(csslint.reporter())
+		.pipe(autoprefixer())
 		.pipe(rename({
 			suffix: '.min'
 		}))
-		.pipe(minifyCss())
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('dist/styles'))
-		.pipe(reload({stream:true}))
-		.pipe(notify('css task finished'))
+		.pipe(gulp.dest('dist/styles/'));
 });
-gulp.task('js', function(){
-	gulp.src(['src/scripts/**/*.js'])
-		.pipe(plumber({
-			handleError: function (err) {
-				console.log(err);
-				this.emit('end');
-			}
-		}))
+
+gulp.task('js:srv', function() {
+	return gulp.src('src/scripts/**/*.js')
+		.pipe(plumber())
 		.pipe(jshint())
-  		.pipe(jshint.reporter('default'))
-		.pipe(gulp.dest('dist/scripts'))
+		.pipe(jshint.reporter(stylish))
+		.pipe(gulp.dest('.tmp/scripts/'))
+		.pipe(browserSync.reload());
+});
+
+gulp.task('js:dist', function() {
+	return gulp.src('src/scripts/**/*.js')
+		.pipe(plumber())
+		.pipe(jshint())
+		.pipe(jshint.reporter(stylish))
+		.pipe(uglify().on('error', function(e) {
+			console.log(e);
+		}))
 		.pipe(rename({
 			suffix: '.min'
 		}))
-		.pipe(uglify())
-		.pipe(gulp.dest('dist/scripts'))
-		.pipe(reload())
-  		.pipe(notify('js task finished'))
+		.pipe(gulp.dest('dist/scripts/'));
 });
-gulp.task('jade', function(){
-	gulp.src(['src/**/*.jade'])
-		.pipe(plumber({
-			handleError: function (err) {
-				console.log(err);
-				this.emit('end');
-			}
-		}))
-		.pipe(jade())
-		.pipe(gulp.dest('dist/'))
-		.pipe(reload())
-		.pipe(notify('html task finished'))
+
+gulp.task('images:srv', function() {
+	return gulp.src('src/assets/images/**/*')
+		.pipe(plumber())
+		.pipe(gulp.dest('.tmp/assets/images/'))
+		.pipe(browserSync.reload());
 });
-gulp.task('image', function(){
-	gulp.src(['src/images/**/*'])
-		.pipe(plumber({
-			handleError: function (err) {
-				console.log(err);
-				this.emit('end');
-			}
-		}))
-		.pipe(cache(imageMin()))
-		.pipe(gulp.dest('dist/images'))
-		.pipe(reload())
-		.pipe(notify('image task finished'))
+
+gulp.task('images:dist', function() {
+	return gulp.src('src/assets/images/**/*')
+		.pipe(plumber())
+		.pipe(imagemin())
+		.pipe(gulp.dest('dist/assets/images/'))
 });
-gulp.task('default', function(){
+
+gulp.task('fonts:srv', function() {
+	return gulp.src('src/assets/fonts/**/*')
+		.pipe(plumber())
+		.pipe(gulp.dest('.tmp/assets/fonts/'))
+		.pipe(browserSync.reload());
+});
+
+gulp.task('fonts:dist', function() {
+	return gulp.src('src/assets/fonts/**/*')
+		.pipe(plumber())
+		.pipe(gulp.dest('dist/assets/fonts/'));
+});
+
+//gulp.task('default', ['clean:srv', 'jade:srv', 'sass:srv', 'js:srv', 'images:srv', 'fonts:srv'], function() {
+gulp.task('default', ['clean:srv', 'html:srv', 'sass:srv', 'js:srv', 'images:srv', 'fonts:srv'], function() {
 	browserSync.init({
-        server: "dist"
-    });
-	gulp.watch('src/scripts/**/*.js',['js']);
-	gulp.watch('src/styles/**/*.sass',['sass']);
-	gulp.watch('src/**/*.jade',['jade']);
-	gulp.watch('src/images/**/*',['image']);
+		server: '.tmp/',
+		notify: false
+	});
+
+	gulp.watch('src/*.jade', ['jade:srv']);
+	gulp.watch('src/styles/**/*.sass', ['sass:srv']);
+	gulp.watch('src/scripts/**/*.js', ['js:srv']);
+	gulp.watch('src/assets/images/**/*', ['images:srv']);
+	gulp.watch('src/assets/fonts/**/*', ['fonts:srv']);
 });
+
+//gulp.task('dist', ['clean:dist', 'jade:dist', 'sass:dist', 'js:dist', 'images:dist', 'fonts:dist']);
+gulp.task('dist', ['clean:dist', 'html:dist', 'sass:dist', 'js:dist', 'images:dist', 'fonts:dist']);
+
+// TODO fix gulp-jade
+// TODO add wiredep
