@@ -78,9 +78,7 @@ gulp.task('sass:dist', function() {
 			indentedSyntax: true,
 			indentType: 'tab',
 			outputStyle: 'compressed'
-		}).on('error', sass.logError()))
-		.pipe(csslint())
-		.pipe(csslint.reporter())
+		}))
 		.pipe(autoprefixer())
 		.pipe(rename({
 			suffix: '.min'
@@ -105,9 +103,7 @@ gulp.task('js:dist', function() {
 			esversion: 6
 		}))
 		.pipe(jshint.reporter(stylish))
-		.pipe(uglify().on('error', function(e) {
-			console.log(e);
-		}))
+		.pipe(uglify())
 		.pipe(rename({
 			suffix: '.min'
 		}))
@@ -154,7 +150,7 @@ gulp.task('wiredep:dist', function () {
 //gulp.task('default', ['clean:srv', 'jade:srv', 'sass:srv', 'js:srv', 'images:srv', 'fonts:srv'], function() {
 gulp.task('default', ['clean:srv', 'wiredep:srv', 'sass:srv', 'js:srv', 'images:srv', 'fonts:srv'], function() {
 	browserSync.init({
-		server: '.tmp/',
+		server: '.',
 		notify: false
 	});
 
