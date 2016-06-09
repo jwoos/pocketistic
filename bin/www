@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -8,13 +10,13 @@ const app = require('../app');
 const debug = require('debug')('pocketistic:server');
 const http = require('http');
 
-const constants = require('../constants');
+const data = require('../data');
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(constants.port);
+const port = normalizePort(data.port);
 app.set('port', port);
 
 /**
