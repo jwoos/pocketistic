@@ -1,6 +1,23 @@
 @import 'flex'
+@import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light)
+
+body
+	@extend .fullbleed
 
 body, h1, h2, h3, h4, h5, h6, p
 	padding: 0
 	margin: 0
 
+#home
+	@extend .layout
+	@extend .vertical
+	@extend .center-center
+	height: 100%
+	width: 100%
+
+	h1
+		font-family: 'Shadows Into Light', cursive
+
+	button
+		margin: 30px auto
+		display: block

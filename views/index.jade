@@ -1,5 +1,16 @@
 extends layout
 
 block content
-	h1= title
-	p Welcome to #{title}
+	div#home
+		div
+			h1 Pocketistic
+			button.btn.btn-default(type='button', data-toggle='modal', data-target='#modal') SIGN IN
+
+		div.modal.fade#modal(tabindex='-1', role='dialog')
+			div.modal-dialog.modal-sm(role='document')
+				div.modal-content
+					div.modal-body
+						p Redirecting...
+
+block scripts
+	script(src='scripts/index.js')
