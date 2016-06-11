@@ -6,7 +6,7 @@ const router = express.Router();
 const data = require('../data');
 const Authenticator = require('../controllers/authentication');
 
-let authAgent = new Authenticator(data.consumerKey, `${data.url}/login/end`, '');
+let authAgent = new Authenticator(data.consumerKey, `${data.url}/login?end=true`, '');
 
 // authentication endpoints
 router.get('/request', (req, res, next) => {

@@ -21,55 +21,54 @@ h1, h2, h3, h4, h5, h6
 div, p, span
 	font-family: 'Roboto', sans-serif
 
-#home, #login
+#login
 	@extend .layout
 	@extend .vertical
 	@extend .center-center
-	height: 100%
-	width: 100%
 
-	h1
-		font-size: 48px
-		font-family: 'Shadows Into Light', cursive
-		text-align: center
-
-	div.skew-button
-		overflow: hidden
-		position: relative
-		margin: 30px auto
-		width: 140px
-
-		div
-			cursor: pointer
+	div
+		h1
+			font-size: 48px
+			font-family: 'Shadows Into Light', cursive
 			text-align: center
-			overflow: hidden
-			background-color: transparent
-			border: solid 2px black
-			color: black
-			padding: 7.5px 25px
-			display: block
-			outline: 0
-			letter-spacing: 2px
-			transition: all .4s ease
-			font-weight: bold
-			&:before
-				position: absolute
-				transition: all .4s ease
-				content: ''
-				width: 0
-				bottom: 0
-				background-color: #3498db
-				height: 120%
-				left: -10%
-				transform: skewX(15deg)
-				z-index: -1
-			&:hover
-				color: white
-				border-color: #3498db
-				&::before
-					width: 120%
 
-	img
-		margin: 30px auto
-		display: block
-		width: 50px
+		div.skew-button
+			overflow: hidden
+			position: relative
+			margin: 30px auto
+			width: 140px
+
+			div
+				cursor: pointer
+				text-align: center
+				overflow: hidden
+				background-color: transparent
+				border: solid 2px black
+				color: black
+				padding: 7.5px 25px
+				display: block
+				outline: 0
+				letter-spacing: 2px
+				transition: all .4s ease
+				font-weight: bold
+				&:before
+					position: absolute
+					transition: all .4s ease
+					content: ''
+					width: 0
+					bottom: 0
+					background-color: #3498db
+					height: 120%
+					left: -10%
+					transform: skewX(15deg)
+					z-index: -1
+				&:hover
+					color: white
+					border-color: #3498db
+					&::before
+						width: 120%
+
+		img
+			margin: 30px auto
+			display: block
+			width: 50px

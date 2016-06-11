@@ -7,10 +7,9 @@ const data = require('../data');
 
 router.get('/', (req, res, next) => {
 	let sess = req.session;
-	console.log(req.session);
 
 	if (sess.accessToken) {
-		res.render('home', {userName: sess.userName});
+		res.render('index', {userName: sess.userName});
 	} else {
 		res.redirect('/login')
 	}
@@ -18,15 +17,12 @@ router.get('/', (req, res, next) => {
 
 router.get('/login', (req, res, next) => {
 	let sess = req.session;
+
 	if (sess.accessToken) {
 		res.redirect('/');
 	} else {
-		res.render('index', {});
+		res.render('login', {end: req.query.end});
 	}
-});
-
-router.get('/login/end', (req, res, next) => {
-	res.render('login', {});
 });
 
 module.exports = router;

@@ -1,11 +1,15 @@
-extends layout
-
+doctype html
+html
+	head
+		title Pocketistic
+		link(rel='stylesheet', href='/stylesheets/vendor/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/vendor/bootstrap-dashboard.css')
+		link(rel='stylesheet', href='/stylesheets/vendor/sweetalert.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
 block content
 	div#home
-		div
-			h1 Pocketistic
-			div.skew-button: div SIGN IN
 
-block scripts
-	script(src='/scripts/vendor/trianglify.min.js')
-	script(src='/scripts/login.js')
+
+	script(src='/scripts/vendor/jquery-3.0.0.min.js')
+	script(src='/scripts/vendor/sweetalert.min.js')
+	script(src='/scripts/index.js')

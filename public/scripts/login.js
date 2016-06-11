@@ -37,7 +37,7 @@ $(document).ready(function() {
 		}, 1500);
 	});
 
-	if (location.pathname.indexOf('/login/end') > -1) {
+	if (location.search.indexOf('?end=true') > -1) {
 		$.get('/auth/access')
 			.done(function(data, textStatus, jqXHR) {
 				window.location.href = '/';
