@@ -9,5 +9,5 @@ const Proxy = require('../controllers/proxy')
 let proxy = new Proxy();
 
 // proxy endpoints
-router.get('/proxy/retrieve', (req, res, next) => {
+router.get('/retrieve', (req, res, next) => {
 });

@@ -92,7 +92,6 @@ class Authenticator {
 				response.accessToken = this.accessToken;
 			}
 
-
 			fn(response);
 		});
 	}
