@@ -16,7 +16,12 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-	res.render('index', {});
+	let sess = req.session;
+	if (sess.accessToken) {
+		res.redirect('/');
+	} else {
+		res.render('index', {});
+	}
 });
 
 router.get('/login/end', (req, res, next) => {
