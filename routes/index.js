@@ -16,11 +16,11 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-	if (req.query.auth) {
-		res.render('login', {});
-	} else {
-		res.render('index', {});
-	}
+	res.render('index', {});
+});
+
+router.get('/login/end', (req, res, next) => {
+	res.render('login', {});
 });
 
 module.exports = router;

@@ -30,7 +30,7 @@ class Authenticator {
 	}
 
 	retrieveRequestToken(fn) {
-		let reponse = {};
+		let response = {};
 
 		let options = {
 			url: data.apiRequest,
@@ -46,17 +46,16 @@ class Authenticator {
 			if (err) {
 				console.log(err);
 				reponse.error = err;
-				fn(response);
-				return;
+			} else {
+				console.log(body);
+				this._requestToken = JSON.parse(body).code;
+				this.accessPostData.code = this._requestToken;
+
+				let url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
+
+				response.redirect = url;
 			}
 
-			console.log(body);
-			this._requestToken = body.code;
-			this.accessPostData.code = this._requestToken;
-
-			let url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`
-
-			response.redirect = url;
 			fn(response);
 		});
 	}
