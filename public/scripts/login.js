@@ -7,7 +7,7 @@ $(document).ready(function() {
 		});
 	});
 
-	if (location.path.indexOf('/login/end') > -1) {
+	if (location.pathname.indexOf('/login/end') > -1) {
 		$.get('/auth/access', function(data, status) {
 			window.location.href = '/';
 		});
