@@ -3,7 +3,7 @@
 const pg = require('pg');
 const data = require('../data');
 
-if process.env.NODE_ENV === 'production' {
+if (process.env.NODE_ENV === 'production') {
 	pg.defaults.ssl = true;
 }
 
