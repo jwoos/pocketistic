@@ -86,14 +86,12 @@ class Authenticator {
 				response.error = err;
 			} else {
 				console.log(body);
-				this.authData.access_token = body.access_token;
-				this.userName = body.username;
+				this.authData.access_token = JSON.parse(body).access_token;
+				this.userName = JSON.parse(body).username;
 
 				response.userName = this.userName;
 				response.accessToken = this.accessToken;
 			}
-
-			utility.print(response);
 
 			fn(response);
 		});
