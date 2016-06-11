@@ -5,6 +5,7 @@ const http = require('http');
 const request = require('request');
 
 const data = require('../data');
+const utility = require('../utility');
 
 class Authenticator {
 	constructor(consumerKey, redirectUrl, state) {
@@ -91,6 +92,8 @@ class Authenticator {
 				response.userName = this.userName;
 				response.accessToken = this.accessToken;
 			}
+
+			utility.print(response);
 
 			fn(response);
 		});
