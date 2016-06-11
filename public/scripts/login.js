@@ -1,20 +1,40 @@
 'use strict';
 
-function print(content) {
-	console.log('------------------------------\n');
-	console.log(content);
-	console.log('\n------------------------------');
-}
-
 $(document).ready(function() {
-	$('.btn').click(function() {
-		$.get('/auth/request')
-			.done(function(data, textStatus, jqXHR) {
-				window.location.href = data;
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				console.log(textStatus);
-				console.log(errorThrown);
-			});
+	var pattern = Trianglify({
+		height: $('body').height(),
+		width: $('body').width(),
+		cell_size: 60,
+		variance: '1',
+		x_colors: 'Spectral',
+		y_colors: 'match_x',
+	});
+
+	$('body').css('background-image', 'url(' + pattern.png() + ')');
+
+	$('.skew-button').click(function() {
+		swal({
+			title: 'Redirecting',
+			text: 'You will be redirected to Pocket to sign in',
+			showConfirmButton: false,
+			type: 'info'
+		});
+
+		setTimeout(function() {
+			$.get('/auth/request')
+				.done(function(data, textStatus, jqXHR) {
+					window.location.href = data;
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					swal({
+						title: 'Oops',
+						type: 'error',
+						text: `${jqXHR.status}: ${errorThrown}`,
+						allowEscapeKey: false
+					}, function() {
+						window.location.href = '/';
+					});
+				});
+		}, 1500);
 	});
 
 	if (location.pathname.indexOf('/login/end') > -1) {
@@ -22,8 +42,14 @@ $(document).ready(function() {
 			.done(function(data, textStatus, jqXHR) {
 				window.location.href = '/';
 			}).fail(function(jqXHR, textStatus, errorThrown) {
-				console.log(errorThrown);
-				console.log(textStatus);
+				swal({
+					title: 'Oops',
+					type: 'error',
+					text: `${jqXHR.status}: ${errorThrown}`,
+					allowEscapeKey: false
+				}, function() {
+					window.location.href = '/';
+				});
 			});
 	}
 });

@@ -4,13 +4,8 @@ block content
 	div#home
 		div
 			h1 Pocketistic
-			button.btn.btn-default(type='button', data-toggle='modal', data-target='#modal') SIGN IN
-
-		div.modal.fade#modal(tabindex='-1', role='dialog')
-			div.modal-dialog.modal-sm(role='document')
-				div.modal-content
-					div.modal-body
-						p Redirecting...
+			div.skew-button: div SIGN IN
 
 block scripts
+	script(src='/scripts/vendor/trianglify.min.js')
 	script(src='/scripts/login.js')

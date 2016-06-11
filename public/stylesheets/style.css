@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
 .layout.horizontal, .horizontal#home, .horizontal#login,
 .layout.horizontal-reverse,
@@ -243,20 +244,67 @@ body.fullbleed, body {
   bottom: 0;
   left: 0; }
 
+body {
+  height: 100vh !important;
+  width: 100vw;
+  background-size: cover;
+  background-position: center center;
+  font-family: 'Roboto', sans-serif; }
+
 body, h1, h2, h3, h4, h5, h6, p {
   padding: 0;
   margin: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Shadows Into Light', cursive; }
+
+div, p, span {
+  font-family: 'Roboto', sans-serif; }
 
 #home, #login {
   height: 100%;
   width: 100%; }
   #home h1, #login h1 {
+    font-size: 48px;
     font-family: 'Shadows Into Light', cursive;
     text-align: center; }
-  #home button, #login button {
+  #home div.skew-button, #login div.skew-button {
+    overflow: hidden;
+    position: relative;
     margin: 30px auto;
-    display: block; }
+    width: 140px; }
+    #home div.skew-button div, #login div.skew-button div {
+      cursor: pointer;
+      text-align: center;
+      overflow: hidden;
+      background-color: transparent;
+      border: solid 2px black;
+      color: black;
+      padding: 7.5px 25px;
+      display: block;
+      outline: 0;
+      letter-spacing: 2px;
+      transition: all .4s ease;
+      font-weight: bold; }
+      #home div.skew-button div:before, #login div.skew-button div:before {
+        position: absolute;
+        transition: all .4s ease;
+        content: '';
+        width: 0;
+        bottom: 0;
+        background-color: #3498db;
+        height: 120%;
+        left: -10%;
+        transform: skewX(15deg);
+        z-index: -1; }
+      #home div.skew-button div:hover, #login div.skew-button div:hover {
+        color: white;
+        border-color: #3498db; }
+        #home div.skew-button div:hover::before, #login div.skew-button div:hover::before {
+          width: 120%; }
   #home img, #login img {
-    margin: 30px auto; }
+    margin: 30px auto;
+    display: block;
+    width: 50px; }
 
 /*# sourceMappingURL=style.css.map */
