@@ -13,6 +13,8 @@ router.get('/request', (req, res, next) => {
 	authAgent.retrieveRequestToken((response) => {
 		if (response.error) {
 			res.status(502).send(response.error);
+		} else if (response.statusCode !== 200) {
+			res.status(response.statusCode).send(response.statusError);
 		} else {
 			res.send(response.redirect);
 		}
@@ -25,6 +27,8 @@ router.get('/access', (req, res, next) => {
 	authAgent.retrieveAccessToken((response) => {
 		if (response.error) {
 			res.status(502).send(response.error);
+		} else if (response.statusCode !== 200) {
+			res.status(response.statusCode).send(response.statusError);
 		} else {
 			req.session.accessToken= response.accessToken;
 			req.session.userName = response.userName;

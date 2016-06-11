@@ -48,13 +48,18 @@ class Authenticator {
 				console.log(err);
 				reponse.error = err;
 			} else {
-				console.log(body);
-				this._requestToken = JSON.parse(body).code;
-				this.accessPostData.code = this._requestToken;
+				response.statusCode = res.statusCode;
 
-				let url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
+				if (res.statusCode === 200) {
+					this._requestToken = JSON.parse(body).code;
+					this.accessPostData.code = this._requestToken;
 
-				response.redirect = url;
+					let url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
+
+					response.redirect = url;
+				} else {
+					response.statusError = body;
+				}
 			}
 
 			fn(response);
@@ -80,17 +85,24 @@ class Authenticator {
 			body: JSON.stringify(this.accessPostData)
 		};
 
+		utility.print(options);
+
 		request(options, (err, res, body) => {
 			if (err) {
 				console.log(err);
 				response.error = err;
 			} else {
-				console.log(body);
-				this.authData.access_token = JSON.parse(body).access_token;
-				this.userName = JSON.parse(body).username;
+				response.statusCode = res.statusCode;
 
-				response.userName = this.userName;
-				response.accessToken = this.accessToken;
+				if (res.statusCode === 200) {
+					this.authData.access_token = JSON.parse(body).access_token;
+					this.userName = JSON.parse(body).username;
+
+					response.userName = this.userName;
+					response.accessToken = this.accessToken;
+				} else {
+					response.statusError = body;
+				}
 			}
 
 			fn(response);

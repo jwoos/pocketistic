@@ -22,8 +22,8 @@ $(document).ready(function() {
 			.done(function(data, textStatus, jqXHR) {
 				window.location.href = '/';
 			}).fail(function(jqXHR, textStatus, errorThrown) {
-				console.log(data);
-				console.log(status);
+				console.log(errorThrown);
+				console.log(textStatus);
 			});
 	}
 });
