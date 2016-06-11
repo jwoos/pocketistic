@@ -7,3 +7,5 @@
 - http://docs.sequelizejs.com/en/latest/
 	- model file for sessions
 	- cache all data
+- default role on postgres
+	- create a user for my user?
