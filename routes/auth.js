@@ -30,8 +30,8 @@ router.get('/access', (req, res, next) => {
 		} else if (response.statusCode !== 200) {
 			res.status(response.statusCode).send(response.statusError);
 		} else {
-			req.session.accessToken= response.accessToken;
-			req.session.userName = response.userName;
+			sess.accessToken = response.accessToken;
+			sess.userName = response.userName;
 			res.send('Authenticated!');
 		}
 	});

@@ -76,7 +76,7 @@ class Authenticator {
 		}
 
 		let options = {
-			url: data.apiRequest,
+			url: data.apiAccess,
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=UTF-8',
@@ -84,8 +84,6 @@ class Authenticator {
 			},
 			body: JSON.stringify(this.accessPostData)
 		};
-
-		utility.print(options);
 
 		request(options, (err, res, body) => {
 			if (err) {
@@ -95,11 +93,11 @@ class Authenticator {
 				response.statusCode = res.statusCode;
 
 				if (res.statusCode === 200) {
-					this.authData.access_token = JSON.parse(body).access_token;
+					this.authData.accessToken = JSON.parse(body).access_token;
 					this.userName = JSON.parse(body).username;
 
 					response.userName = this.userName;
-					response.accessToken = this.accessToken;
+					response.accessToken = this.authData.accessToken;
 				} else {
 					response.statusError = body;
 				}
