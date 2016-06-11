@@ -13,11 +13,14 @@ pg.connect(data.pgConnection, function(err, client, done) {
 	}
 
 	let query = client.query(`
-			CREATE TABLE links(
-				id SERIAL PRIMARY KEY NOT NULL,
-				url TEXT NOT NULL
-				)
-			`);
+		CREATE TABLE "session" (
+		  "sid" varchar NOT NULL COLLATE "default",
+			"sess" json NOT NULL,
+			"expire" timestamp(6) NOT NULL
+		)
+		WITH (OIDS=FALSE);
+		ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+	`);
 
 	query.on('error', function(err) {
 		console.log(err);

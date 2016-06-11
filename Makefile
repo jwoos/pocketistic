@@ -9,3 +9,6 @@ debug:
 
 heroku-bash:
 	heroku run --app sheltered-badlands-26515 bash
+
+heroku-psql:
+	heroku pg:psql --app sheltered-badlands-26515 DATABASE
