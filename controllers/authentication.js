@@ -84,16 +84,15 @@ class Authenticator {
 			if (err) {
 				console.log(err);
 				response.error = err;
-				fn(response);
-				return;
+			} else {
+				console.log(body);
+				this.authData.access_token = body.access_token;
+				this.userName = body.username;
+
+				response.userName = this.userName;
+				response.accessToken = this.accessToken;
 			}
 
-			console.log(body);
-			this.authData.access_token = body.access_token;
-			this.userName = body.username;
-
-			response.userName = this.userName;
-			response.accessToken = this.accessToken;
 
 			fn(response);
 		});
