@@ -18,7 +18,10 @@
     "node-sass-middleware": "^0.9.8",
     "node-uuid": "^1.4.7",
     "pg": "^4.5.6",
+    "pg-hstore": "^2.3.2",
     "request": "^2.72.0",
-    "serve-favicon": "~2.3.0"
+    "sequelize": "^3.23.4",
+    "serve-favicon": "~2.3.0",
+    "umzug": "^1.11.0"
   }
 }
