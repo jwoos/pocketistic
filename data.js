@@ -1,7 +1,7 @@
 'use struct';
 
 const constants = {
-	consumerKey: '51787-0f16e59e8e3c7ee3d8c777c4',
+	consumerKey: '56034-b789e27a99df914a8a17e079',
 	apiBase: 'https://getpocket.com/v3',
 	apiRequest: 'https://getpocket.com/v3/oauth/request',
 	apiAccess: 'https://getpocket.com/v3/oauth/authorize',

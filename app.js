@@ -43,7 +43,7 @@ let sess = {
 	cookie: {
 		secure: true,
 		httpOnly: true,
-		maxAge: 60 * 60 * 1000 * 24 * 30 // 30 days
+		maxAge: 60 * 60 * 1000 * 24 * 7 // 7 days
 	}
 };
 
@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', index);
 app.use('/auth/', auth);
-app.use('/proxy/', auth);
+app.use('/proxy/', proxy);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

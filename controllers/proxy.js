@@ -10,7 +10,8 @@ const utility = require('../utility');
 class Proxy {
 	constructor() {}
 
-	retrieve(accessToken, data={}, fn) {
+	retrieve(accessToken, dat, fn) {
+		dat = dat || {};
 		/*
 		 * state         string       unread/archive/all
 		 * favorite      0 or 1       0/1
@@ -28,17 +29,19 @@ class Proxy {
 
 		let getData = {
 			access_token: accessToken,
+			consumer_key: data.consumerKey
 		};
 
-		Object.assign(getData, data);
+		Object.assign(getData, dat);
 
 		let options = {
+			url: `${data.apiBase}/get`,
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=UTF-8',
 				'X-Accept': 'application/json',
 			},
-			body: JSON.stringify(getData);
+			body: JSON.stringify(getData)
 		};
 
 		request(options, (err, res, body) => {
@@ -46,11 +49,13 @@ class Proxy {
 				console.log(err);
 				response.error = err;
 			} else {
-				reponse.statusCode = res.statusCode;
+				response.statusCode = res.statusCode;
 
 				if (res.statusCode === 200) {
 					let respJson = JSON.parse(body);
+					response.json = respJson;
 				} else {
+					console.log(res.headers);
 					response.statusError = body;
 				}
 			}

@@ -99,6 +99,7 @@ class Authenticator {
 					response.userName = this.userName;
 					response.accessToken = this.authData.accessToken;
 				} else {
+					console.log(res.headers);
 					response.statusError = body;
 				}
 			}
