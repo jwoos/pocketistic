@@ -6,6 +6,7 @@ $(document).ready(function() {
 		state: 'all'
 	}).done(function(data, textStatus, jqXHR) {
 		data = data;
+		console.log(data);
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({
 			title: 'Oops',
@@ -13,5 +14,4 @@ $(document).ready(function() {
 			text: `${jqXHR.status}: ${errorThrown}`
 		});
 	});
-	console.log(data);
 });
