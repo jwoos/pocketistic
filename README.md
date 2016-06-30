@@ -1,7 +1,8 @@
 # Pocketistic
 ## To do
-- migrations
-- fix up models
+- add column to session to key either on user id or username
+	- another migration
+	- https://github.com/origin1tech/connect-sequelize
 
 ## Data models
 
