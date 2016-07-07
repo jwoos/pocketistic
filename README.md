@@ -12,17 +12,18 @@
 | sid         | varchar      | UUID generated for session | pk          |
 | json        | json         | Session data               |             |
 | expire      | timestamp(6) | Expire datetime            |             |
-| username    | varchar      | Pocket username            | fk          |
+| id          | int          |                            | fk          |
 
 ### user
 | column name | type    | description     | constraints |
 |-------------|---------|-----------------|-------------|
-| username    | varchar | Pocket username | pk          |
+| username    | varchar | Pocket username | unique      |
+| id          | int     |                 | pk          |
 
 ### article
 | column name    | type      | description     | constraints |
 |----------------|-----------|-----------------|-------------|
-| username       | varchar   | Pocket username | fk          |
+| id             | int       |                 | fk          |
 | item_id        | varchar   | An article's id | pk          |
 | status         | int       | Read state      |             |
 | word_count     | int       | Word count      |             |
