@@ -8,6 +8,7 @@ const uuid = require('node-uuid');
 const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
+const sessionManager = require('connect-session-sequelize')(session.Store);
 const sass = require('node-sass-middleware');
 
 // routes
@@ -15,6 +16,7 @@ const index = require('./routes/index');
 const auth = require('./routes/auth');
 const proxy = require('./routes/proxy');
 
+const db = require('./models/index');
 const data = require('./data');
 
 const app = express();
@@ -28,10 +30,16 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 
 let sess = {
-	store: new pgSession({
-		pg: pg,
-		conString: data.pgConnection,
-		tableName: 'session'
+	store: new sessionManager({
+		db: db.sequelize,
+		table: 'Session',
+		extendDefaultFields: (defaults, session) => {
+			return {
+				data: defaults.data,
+				expires: defaults.expires,
+				userId: session.userId
+			};
+		}
 	}),
 	secret: 'N#E1kbzbI$H!0E9%',
 	name: 'sessionId',

@@ -3,8 +3,11 @@
 const express = require('express');
 const router = express.Router();
 
-const data = require('../data');
 const Authenticator = require('../controllers/authentication');
+
+const db = require('../models/index');
+
+const data = require('../data');
 
 let authAgent = new Authenticator(data.consumerKey, `${data.url}/login?end=true`, '');
 
@@ -30,9 +33,19 @@ router.get('/access', (req, res, next) => {
 		} else if (response.statusCode !== 200) {
 			res.status(response.statusCode).send(response.statusError);
 		} else {
-			sess.accessToken = response.accessToken;
-			sess.userName = response.userName;
-			res.send('Authenticated!');
+			db.User.findOrCreate({
+				where: {
+					username: response.userName
+				}
+			}).spread((user, created) => {
+				sess.accessToken = response.accessToken;
+				sess.userName = response.userName;
+				sess.userId = user.get({
+					plain: true
+				}).id;
+
+				res.send('Authenticated!');
+			});
 		}
 	});
 });

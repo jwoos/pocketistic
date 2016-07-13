@@ -1,8 +1,7 @@
 # Pocketistic
 ## To do
-- add column to session to key either on user id or username
-	- another migration
-	- https://github.com/origin1tech/connect-sequelize
+- figure out stats
+- wait for https://github.com/mweibel/connect-session-sequelize/issues/38
 
 ## Data models
 
@@ -12,7 +11,7 @@
 | sid         | varchar      | UUID generated for session | pk          |
 | json        | json         | Session data               |             |
 | expire      | timestamp(6) | Expire datetime            |             |
-| id          | int          |                            | fk          |
+| user_id     | int          |                            | fk          |
 
 ### user
 | column name | type    | description     | constraints |
@@ -23,7 +22,7 @@
 ### article
 | column name    | type      | description     | constraints |
 |----------------|-----------|-----------------|-------------|
-| id             | int       |                 | fk          |
+| user_id        | int       |                 | fk          |
 | item_id        | varchar   | An article's id | pk          |
 | status         | int       | Read state      |             |
 | word_count     | int       | Word count      |             |
