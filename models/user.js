@@ -1,20 +1,25 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-	var User = sequelize.define('User', {
+	let User = sequelize.define('User', {
+		id: {
+			autoIncrement: true,
+			primaryKey: true,
+			type: DataTypes.INTEGER
+		},
 		username: {
 			allowNull: false,
+			unique: true,
 			type: DataTypes.STRING
 		}
 	}, {
 		classMethods: {
-			associate: function(models) {
-				// associations can be defined here
-			}
+			associate: function(models) {}
 		},
 		freezeTableName: true,
 		tableName: 'user',
-		timestamps: true
+		timestamps: false
 	});
+
 	return User;
 };

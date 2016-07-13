@@ -1,21 +1,21 @@
 {
-  "development": {
+	"development": {
 		"url": "postgres://postgres:123456789@localhost/pocketistic",
-    "dialect": "postgres",
+		"dialect": "postgres",
 		"seeder_storage": "sequelize"
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "pocketistic",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
-  },
-  "production": {
+	},
+	"test": {
+		"username": "root",
+		"password": null,
+		"database": "pocketistic",
+		"host": "127.0.0.1",
+		"dialect": "postgres"
+	},
+	"production": {
 		"url": {
 			"use_env_variable": "process.env.DATABASE_URL"
 		},
-    "dialect": "postgres",
+		"dialect": "postgres",
 		"seeder_storage": "sequelize"
-  }
+	}
 }

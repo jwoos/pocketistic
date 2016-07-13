@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-	var Session = sequelize.define('Session', {
+	let Session = sequelize.define('Session', {
 		sid: {
 			allowNull: false,
 			primaryKey: true,
@@ -14,16 +14,22 @@ module.exports = function(sequelize, DataTypes) {
 		expire: {
 			allowNull: false,
 			type: DataTypes.DATE(6)
+		},
+		user_id: {
+			references: {
+				model: 'user',
+				key: 'id'
+			},
+			type: Sequelize.INTEGER
 		}
 	}, {
 		classMethods: {
-			associate: function(models) {
-				// associations can be defined here
-			}
+			associate: function(models) {}
 		},
 		freezeTableName: true,
 		tableName: 'session',
 		timestamps: false,
 	});
+
 	return Session;
 };
