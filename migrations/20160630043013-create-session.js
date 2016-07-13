@@ -9,7 +9,7 @@ module.exports = {
 			},
 			sess: {
 				allowNull: false,
-				type: Sequelize.JSON
+				type: Sequelize.STRING
 			},
 			expire: {
 				allowNull: false,

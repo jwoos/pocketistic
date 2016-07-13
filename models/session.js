@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		sess: {
 			allowNull: false,
-			type: DataTypes.JSON
+			type: DataTypes.STRING
 		},
 		expire: {
 			allowNull: false,
@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
 				model: 'user',
 				key: 'id'
 			},
-			type: Sequelize.INTEGER
+			type: DataTypes.INTEGER
 		}
 	}, {
 		classMethods: {
