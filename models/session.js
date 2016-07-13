@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
 	let Session = sequelize.define('Session', {
 		sid: {
 			allowNull: false,
@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
 		}
 	}, {
 		classMethods: {
-			associate: function(models) {}
+			associate: (models) => {}
 		},
 		freezeTableName: true,
 		tableName: 'session',

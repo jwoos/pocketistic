@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
 	let User = sequelize.define('User', {
 		id: {
 			autoIncrement: true,
@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
 		}
 	}, {
 		classMethods: {
-			associate: function(models) {}
+			associate: (models) => {}
 		},
 		freezeTableName: true,
 		tableName: 'user',
