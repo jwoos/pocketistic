@@ -8,7 +8,7 @@ const utility = {
 	},
 	sleep: (sleepDuration) => {
 		let now = new Date().getTime();
-    while (new Date().getTime() < now + sleepDuration) {/* do nothing */}
+		while (new Date().getTime() < now + sleepDuration) {/* do nothing */}
 	}
 };
 

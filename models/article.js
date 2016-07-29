@@ -43,11 +43,11 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		time_added: {
 			allowNull: false,
-			type: DataTypes.TIMESTAMP
+			type: DataTypes.DATE
 		},
 		time_read: {
 			allowNull: false,
-			type: DataTypes.TIMESTAMP
+			type: DataTypes.DATE
 		}
 	}, {
 		classMethods: {

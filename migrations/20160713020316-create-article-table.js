@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+	up: (queryInterface, Sequelize) => {
 		return queryInterface.createTable('article', {
 			user_id: {
 				references: {
@@ -47,8 +47,8 @@ module.exports = {
 				type: Sequelize.DATE
 			}
 		});
-  },
-  down: (queryInterface, Sequelize) => {
+	},
+	down: (queryInterface, Sequelize) => {
 		return queryInterface.dropTable('article');
-  }
+	}
 };
