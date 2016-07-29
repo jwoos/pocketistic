@@ -2,6 +2,7 @@
 ## To do
 - figure out stats
 - wait for https://github.com/mweibel/connect-session-sequelize/issues/38
+- DOCKERIZE EVERYTHING
 - setup nginx
 - setup https://github.com/Automattic/kue
 
