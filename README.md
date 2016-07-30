@@ -3,6 +3,7 @@
 - figure out stats
 - wait for https://github.com/mweibel/connect-session-sequelize/issues/38
 - DOCKERIZE EVERYTHING
+	- set up better tagging system
 - setup nginx
 - setup https://github.com/Automattic/kue
 
