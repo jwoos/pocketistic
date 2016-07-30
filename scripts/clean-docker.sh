@@ -11,4 +11,4 @@ docker images -qf "dangling=true"  | xargs -r docker rmi
 
 echo 'Removing networks'
 # There is no "dangling=true" for networks.
-docker network ls -qf type=custom | xargs docker network rm
+docker network ls -qf type=custom | xargs -r docker network rm
