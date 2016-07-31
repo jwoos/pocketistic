@@ -12,3 +12,7 @@ docker-build-backend:
 
 docker-push-backend:
 	docker push jwoos/pocketistic-backend
+
+docker-pull-latest:
+	docker pull jwoos/pocketistic-base
+	docker pull jwoos/pocketistic-backend
