@@ -1,18 +1,17 @@
 default:
 	cat Makefile
 
-docker-build-base:
-	docker build -t jwoos/pocketistic-base:latest .
+psql:
+	sudo -u postgres psql pocketistic
 
-docker-push-base:
-	docker push jwoos/pocketistic-base
+debug:
+	DEBUG=pocketistic*: npm start
 
-docker-build-backend:
-	docker build -t jwoos/pocketistic-backend:latest ./backend
+heroku-bash:
+	heroku run --app sheltered-badlands-26515 bash
 
-docker-push-backend:
-	docker push jwoos/pocketistic-backend
+heroku-psql:
+	heroku pg:psql --app sheltered-badlands-26515 DATABASE
 
-docker-pull-latest:
-	docker pull jwoos/pocketistic-base
-	docker pull jwoos/pocketistic-backend
+port-reroute:
+	sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080

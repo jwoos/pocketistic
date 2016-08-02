@@ -1,3 +1,0 @@
-FROM jwoos/pocketistic-base
-
-
