@@ -1,12 +1,12 @@
 'use strict';
 
-let fs        = require('fs');
-let path      = require('path');
+let fs = require('fs');
+let path = require('path');
 let Sequelize = require('sequelize');
-let basename  = path.basename(module.filename);
-let env       = process.env.NODE_ENV || 'development';
-let config    = require(__dirname + '/../config/config.json')[env];
-let db        = {};
+let basename = path.basename(module.filename);
+let env = process.env.NODE_ENV || 'development';
+let config = require(__dirname + '/../config/config.json')[env];
+let db = {};
 let sequelize;
 
 if (config.use_env_variable) {

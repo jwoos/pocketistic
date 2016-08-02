@@ -9,18 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		sess: {
 			allowNull: false,
-			type: DataTypes.STRING
+			type: DataTypes.JSON
 		},
 		expire: {
 			allowNull: false,
 			type: DataTypes.DATE(6)
-		},
-		user_id: {
-			references: {
-				model: 'user',
-				key: 'id'
-			},
-			type: DataTypes.INTEGER
 		}
 	}, {
 		classMethods: {
