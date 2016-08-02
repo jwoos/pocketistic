@@ -19,13 +19,14 @@
     "node-uuid": "^1.4.7",
     "pg": "^4.5.6",
     "pg-hstore": "^2.3.2",
+    "pug": "^2.0.0-beta4",
     "request": "^2.72.0",
     "sequelize": "^3.23.4",
     "sequelize-cli": "^2.4.0",
     "serve-favicon": "~2.3.0",
     "umzug": "^1.11.0"
   },
-	"devDependencies": {
+  "devDependencies": {
     "debug": "~2.2.0"
-	}
+  }
 }

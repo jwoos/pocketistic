@@ -10,6 +10,7 @@ const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const sessionManager = require('connect-session-sequelize')(session.Store);
 const sass = require('node-sass-middleware');
+const pug = require('pug');
 
 // routes
 const index = require('./routes/index');
@@ -25,7 +26,8 @@ app.disable('x-powered-by');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.engine('pug', pug.renderFile);
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 
