@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "pretest": "eslint app.js test/**/*.js routes/*.js controllers/*.js public/scripts/*.js migrations/*.js models/*.js",
+    "test": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -25,6 +27,7 @@
     "umzug": "^1.11.0"
   },
   "devDependencies": {
-    "debug": "~2.2.0"
+    "debug": "~2.2.0",
+    "eslint": "^3.2.2"
   }
 }

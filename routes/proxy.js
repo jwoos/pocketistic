@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const data = require('../data');
-const Proxy = require('../controllers/proxy')
+const Proxy = require('../controllers/proxy');
 
 let proxy = new Proxy();
 

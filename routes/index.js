@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
 	if (sess.accessToken) {
 		res.render('index', {userName: sess.userName});
 	} else {
-		res.redirect('/login')
+		res.redirect('/login');
 	}
 });
 

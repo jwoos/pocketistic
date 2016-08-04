@@ -46,7 +46,7 @@ class Authenticator {
 		request(options, (err, res, body) => {
 			if (err) {
 				console.log(err);
-				reponse.error = err;
+				response.error = err;
 			} else {
 				response.statusCode = res.statusCode;
 
