@@ -5,9 +5,8 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const uuid = require('node-uuid');
-const pg = require('pg');
 const session = require('express-session');
-const sessionManager = require('connect-session-sequelize')(session.Store);
+const pgSession = require('connect-pg-simple')(session);
 const sass = require('node-sass-middleware');
 const pug = require('pug');
 
@@ -31,9 +30,10 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 let sess = {
-	store: new sessionManager({
-		db: db.sequelize,
-		table: 'Session' // actually looking for the model name
+	store: new pgSession({
+		pg: db.pg,
+		conString: data.pgConnection,
+		tableName: 'session'
 	}),
 	secret: 'N#E1kbzbI$H!0E9%',
 	name: 'sessionId',
