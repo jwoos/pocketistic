@@ -3,9 +3,7 @@
 [![Dependency Status](https://dependencyci.com/github/jwoos/web_pocketistic/badge)](https://dependencyci.com/github/jwoos/web_pocketistic)
 
 ## To do
-- figure out stats
-- wait for https://github.com/mweibel/connect-session-sequelize/issues/38
-- setup https://github.com/Automattic/kue
+[here](https://github.com/jwoos/web_pocketistic/issues)
 
 ## Data models
 
