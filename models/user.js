@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			unique: true,
 			type: DataTypes.STRING
+		},
+		last_update: {
+			allowNull: true,
+			type: DataTypes.DATE(6)
 		}
 	}, {
 		classMethods: {

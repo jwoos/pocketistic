@@ -12,6 +12,10 @@ module.exports = {
 				allowNull: false,
 				unique: true,
 				type: Sequelize.STRING
+			},
+			last_update: {
+				allowNull: true,
+				type: Sequelize.DATE(6)
 			}
 		});
 	},
