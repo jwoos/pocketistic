@@ -37,3 +37,7 @@
 | time_read      | timestamp |                 |             |
 
 ### stat
+
+Store as JSON file
+create reference in the db referencing said file
+update if user visits and is older than a week old or if the user requests it

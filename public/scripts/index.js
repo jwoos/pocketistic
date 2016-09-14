@@ -4,16 +4,17 @@ $(document).ready(function() {
 	let data;
 	/*
 	 *$.get('/proxy/retrieve', {
-	 *    state: 'all'
+	 *  state: 'all'
 	 *}).done(function(data, textStatus, jqXHR) {
-	 *    data = data;
-	 *    console.log(data);
+	 *  data = data;
+	 *  console.log(data);
+	 *  console.log(JSON.stringify(data.list));
 	 *}).fail(function(jqXHR, textStatus, errorThrown) {
-	 *    swal({
-	 *        title: 'Oops',
-	 *        type: 'error',
-	 *        text: `${jqXHR.status}: ${errorThrown}`
-	 *    });
+	 *  swal({
+	 *    title: 'Oops',
+	 *    type: 'error',
+	 *    text: `${jqXHR.status}: ${errorThrown}`
+	 *  });
 	 *});
 	 */
 });
