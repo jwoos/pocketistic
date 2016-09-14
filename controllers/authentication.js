@@ -1,11 +1,8 @@
 'use strict';
 
-const http = require('http');
-
 const request = require('request');
 
 const data = require('../data');
-const utility = require('../utility');
 
 class Authenticator {
 	constructor(consumerKey, redirectUrl, state) {

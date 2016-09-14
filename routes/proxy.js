@@ -3,13 +3,10 @@
 const express = require('express');
 const router = express.Router();
 
-const data = require('../data');
-const Proxy = require('../controllers/proxy');
-
-let proxy = new Proxy();
+const proxy = require('../controllers/proxy');
 
 // proxy endpoints
-router.get('/retrieve', (req, res, next) => {
+router.get('/retrieve', (req, res) => {
 	let getData = req.query;
 	let accessToken = req.session.accessToken;
 
