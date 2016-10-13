@@ -1,20 +1,21 @@
 'use strict';
 
-const db = require('./models/index');
+const db = require('../models/index');
 const proxy = require('./proxy');
 
 let lock = {};
 
+// TODO delete article model
+// add data model with userid, username, path of json file
+// save file to json in /user_data and insert path into db
 function update(username, response) {
-	// TODO check for updated day
-	// allow one update a day
 	if (lock[username]) {
 		return;
 	}
 
 	let data = response.json;
 	let parsedData = [];
-	const unusedFields [
+	const unusedFields = [
 		'favorite',
 		'time_updated',
 		'time_favorited',

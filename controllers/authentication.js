@@ -2,6 +2,7 @@
 
 const request = require('request');
 
+const db = require('../models/index');
 const data = require('../data');
 
 class Authenticator {
@@ -95,6 +96,12 @@ class Authenticator {
 
 					response.userName = this.userName;
 					response.accessToken = this.authData.accessToken;
+
+					db.User.findOrCreate({
+						where: {
+							username: response.userName
+						}
+					});
 				} else {
 					console.log(res.headers);
 					response.statusError = body;
