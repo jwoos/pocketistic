@@ -2,6 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto)
 @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light)
 
+$BLUE: #E4F1FE
 
 body
 	@extend .fullbleed
@@ -70,3 +71,14 @@ h1, h2, h3, h4, h5, h6
 			margin: 30px auto
 			display: block
 			width: 50px
+
+#home
+	.navbar
+		.navbar-brand
+			font-family: 'Shadows Into Light', cursive
+			color: $BLUE
+			cursor: default;
+			font-size: 24px;
+		li > a
+			color: $BLUE
+			cursor: default;

@@ -16,17 +16,13 @@ html
 						span.icon-bar
 						span.icon-bar
 					a.navbar-brand(href='#') Pocketistic
+				div.navbar-collapse.collapse#navbar
+					ul.nav.navbar-nav.navbar-right
+						li: a(href='#') #{userName}
 		div.container-fluid
 			div.row
-				div.col-sm-3.col-md-2.sidebar
-					ul.nav.nav-sidebar
-						li.active: a(href='#') Overview
-						li: a(href='#') Daily
-						li: a(href='#') Monthly
-				div.col-sm-9.col-md-10.col-sm-offset-3.col-md-offset-2.main
-					h1.page-header Dashboard
-					div.row
-						p Total read
+				div.col-md-12.main
+					p Total read
 
 
 	script(src='/scripts/vendor/jquery-3.1.0.min.js')

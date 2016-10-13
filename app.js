@@ -14,7 +14,7 @@ const pug = require('pug');
 // routes
 const index = require('./routes/index');
 const auth = require('./routes/auth');
-const proxy = require('./routes/proxy');
+const datahandler = require('./routes/datahandler');
 
 const db = require('./models/index');
 const data = require('./data');
@@ -68,7 +68,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', index);
 app.use('/auth/', auth);
-app.use('/proxy/', proxy);
+app.use('/data/', datahandler);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
