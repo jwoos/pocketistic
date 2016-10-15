@@ -9,45 +9,13 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			type: DataTypes.INTEGER
 		},
-		item_id: {
-			primaryKey: true,
-			type: DataTypes.STRING
+		path: {
+			type: DataTypes.STRING,
+			allowNull: false
 		},
-		status: {
-			allowNull: false,
-			type: DataTypes.INTEGER
-		},
-		word_count: {
-			allowNull: false,
-			type: DataTypes.INTEGER
-		},
-		given_url: {
-			allowNull: false,
-			type: DataTypes.STRING
-		},
-		resolved_url: {
-			allowNull: false,
-			type: DataTypes.STRING
-		},
-		given_title: {
-			allowNull: false,
-			type: DataTypes.STRING
-		},
-		resolved_title: {
-			allowNull: false,
-			type: DataTypes.STRING
-		},
-		excerpt: {
-			allowNull: true,
-			type: DataTypes.STRING
-		},
-		time_added: {
-			allowNull: false,
-			type: DataTypes.DATE
-		},
-		time_read: {
-			allowNull: false,
-			type: DataTypes.DATE
+		version: {
+			type: Sequelize.INTEGER,
+			allowNull: false
 		}
 	}, {
 		classMethods: {

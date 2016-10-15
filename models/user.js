@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		hash: {
 			allowNull: false,
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			unique: true
 		}
 	}, {
 		classMethods: {
