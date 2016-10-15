@@ -13,10 +13,6 @@ module.exports = {
 			path: {
 				type: Sequelize.STRING,
 				allowNull: false
-			},
-			version: {
-				type: Sequelize.INTEGER,
-				allowNull: false
 			}
 		});
 	},

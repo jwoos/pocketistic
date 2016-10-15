@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			type: DataTypes.STRING,
 			unique: true
+		},
+		access_token: {
+			allowNull: false,
+			type: DataTypes.STRING,
+			unique: true
 		}
 	}, {
 		classMethods: {

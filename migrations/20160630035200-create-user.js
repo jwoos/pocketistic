@@ -16,6 +16,11 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING,
 				unique: true
+			},
+			access_token: {
+				allowNull: false,
+				type: Sequelize.STRING,
+				unique: true
 			}
 		});
 	},

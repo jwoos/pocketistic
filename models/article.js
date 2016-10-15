@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
 		path: {
 			type: DataTypes.STRING,
 			allowNull: false
-		},
-		version: {
-			type: Sequelize.INTEGER,
-			allowNull: false
 		}
 	}, {
 		classMethods: {
