@@ -23,11 +23,17 @@ html
 		div.container-fluid
 			div.row
 				div.col-md-12.main
-					p Total read
+					p Total articles: {data.count.total}
+					p Read: {data.count.read}
+					p Unread: {data.count.unread}
+					p Total word count: {data.count.wordCount}
+					p Average words per article: {data.count.averageWordCount}
+					canvas#domain-graph
 
 
 	script(src='/scripts/vendor/jquery-3.1.0.min.js')
 	script(src='/scripts/vendor/sweetalert.min.js')
 	script(src='/scripts/vendor/chart.min.js')
 	script(src='/scripts/vendor/rivets.bundled.min.js')
+	script(src='/scripts/vendor/rcolor.js')
 	script(src='/scripts/index.js')
