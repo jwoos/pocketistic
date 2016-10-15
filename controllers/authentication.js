@@ -2,6 +2,7 @@
 
 const request = require('request');
 
+const md5 = require('blueimp-md5');
 const db = require('../models/index');
 const data = require('../data');
 
@@ -99,7 +100,8 @@ class Authenticator {
 
 					db.User.findOrCreate({
 						where: {
-							username: response.userName
+							username: response.userName,
+							hash: md5(response.userName)
 						}
 					});
 				} else {

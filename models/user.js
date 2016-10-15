@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
 		last_update: {
 			allowNull: true,
 			type: DataTypes.DATE(6)
+		},
+		hash: {
+			allowNull: false,
+			type: DataTypes.STRING
 		}
 	}, {
 		classMethods: {

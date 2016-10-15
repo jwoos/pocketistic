@@ -16,6 +16,10 @@ module.exports = {
 			last_update: {
 				allowNull: true,
 				type: Sequelize.DATE(6)
+			},
+			hash: {
+				allowNull: false,
+				type: Sequelize.STRING
 			}
 		});
 	},
