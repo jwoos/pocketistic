@@ -5,5 +5,4 @@ bower_components
 .tmp/
 dist/
 npm-debug.log
-style.css
-style.css.map
+.sass-cache/
