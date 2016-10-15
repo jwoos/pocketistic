@@ -9,7 +9,7 @@ $(document).ready(function() {
 		swal({
 			title: 'Oops',
 			type: 'error',
-			text: `${jqXHR.status}: ${errorThrown}`
+			text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
 		});
 	});
 
@@ -20,7 +20,7 @@ $(document).ready(function() {
 			swal({
 				title: 'Oops',
 				type: 'error',
-				text: `${jqXHR.status}: ${errorThrown}`
+				text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
 			});
 		});
 	})

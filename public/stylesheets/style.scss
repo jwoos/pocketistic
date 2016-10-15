@@ -112,6 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 				background-size: cover;
 				color: white;
 				transition: transform 0.5s linear;
+				outline: 0;
 
 				&:hover {
 					transform: rotate(360deg);
