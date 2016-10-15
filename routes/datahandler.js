@@ -34,19 +34,17 @@ router.get('/retrieve', (req, res) => {
 	} catch (e) {
 		debug('Error retrieving from local', e);
 
-/*
- *        datahandler.proxyRetrieve(accessToken, (response) => {
- *            if (response.error) {
- *                res.status(502).send(response.error);
- *            } else if (response.statusCode !== 200) {
- *                res.status(response.statusCode).send(response.statusError);
- *            } else {
- *                datahandler.update(username, response.json);
- *
- *                res.send(response.json);
- *            }
- *        });
- */
+		datahandler.proxyRetrieve(accessToken, (response) => {
+			if (response.error) {
+				res.status(502).send(response.error);
+			} else if (response.statusCode !== 200) {
+				res.status(response.statusCode).send(response.statusError);
+			} else {
+				datahandler.update(username, response.json.list);
+
+				res.send(response.json.list);
+			}
+		});
 	}
 });
 

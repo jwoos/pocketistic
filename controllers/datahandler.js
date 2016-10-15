@@ -27,7 +27,7 @@ function update(username, response) {
 	}).then((userInstance) => {
 		user = userInstance;
 
-		let path = `./user_data/${user.hash}/`;
+		let path = `./user_data/${user.hash}`;
 
 		try {
 			fs.mkdirSync(path);
@@ -35,28 +35,10 @@ function update(username, response) {
 			debug(e);
 		}
 
-		return db.Article.findOrCreate({
-			where: {
-				user_username: username
-			},
-			defaults: {
-				path: path
-			}
-		});
-	}).spread((articleInstance, created) => {
 		user.set('last_update', new Date());
 		user.save();
 
-		let readable = new stream.Readable({
-			encoding: 'utf8',
-			read: () => {}
-		});
-		readable.push(response);
-
-		let writable = fs.createWriteStream(`./user_data/${user.hash}/data.json`);
-
-		readable.pipe(writable);
-		writable.end();
+		return fs.writeFile(`${path}/data.json`, JSON.stringify(response));
 	}).catch(() => {
 		debug('Failed updating');
 	});
