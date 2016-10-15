@@ -12,12 +12,12 @@ const sass = require('node-sass-middleware');
 const pug = require('pug');
 
 // routes
-const index = require('./routes/index');
 const auth = require('./routes/auth');
 const datahandler = require('./routes/datahandler');
+const index = require('./routes/index');
 
-const db = require('./models/index');
 const data = require('./data');
+const db = require('./models/index');
 
 const app = express();
 
@@ -56,13 +56,31 @@ if (app.get('env') === 'development') {
 
 app.use(session(sess));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(sass({
-	src: path.join(__dirname, 'public'),
-	dest: path.join(__dirname, 'public'),
-	indentedSyntax: true,
-	sourceMap: true
+app.use(bodyParser.urlencoded({
+	extended: false
 }));
+
+if (app.get('env') === 'development') {
+	app.use(sass({
+		root: path.join(__dirname, 'public'),
+		src: 'stylesheets',
+		dest: 'stylesheets',
+		indentedSyntax: true,
+		sourceMap: true,
+		debug: true,
+		outputStyle: 'expanded'
+	}));
+} else {
+	app.use(sass({
+		root: path.join(__dirname, 'public'),
+		src: 'stylesheets',
+		dest: 'stylesheets',
+		indentedSyntax: true,
+		sourceMap: false,
+		debug: false,
+		outputStyle: 'compressed'
+	}));
+}
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
@@ -79,9 +97,9 @@ app.use((req, res, next) => {
 
 // error handlers
 
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
+	// development error handler
+	// will print stacktrace
 	app.use((err, req, res) => {
 		res.status(err.status || 500);
 		res.render('error', {
@@ -89,16 +107,16 @@ if (app.get('env') === 'development') {
 			error: err
 		});
 	});
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use((err, req, res) => {
-	res.status(err.status || 500);
-	res.render('error', {
-		message: err.message,
-		error: {}
+} else {
+	// production error handler
+	// no stacktraces leaked to user
+	app.use((err, req, res) => {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: {}
+		});
 	});
-});
+}
 
 module.exports = app;
