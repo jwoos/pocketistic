@@ -2,12 +2,12 @@
 
 module.exports = (sequelize, DataTypes) => {
 	let Article = sequelize.define('Article', {
-		user_id: {
+		user_username: {
 			references: {
 				model: 'user',
-				key: 'id'
+				key: 'username'
 			},
-			type: DataTypes.INTEGER
+			type: DataTypes.STRING
 		},
 		path: {
 			type: DataTypes.STRING,
