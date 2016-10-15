@@ -1,5 +1,10 @@
 'use strict';
 
+const fs = require('fs');
+const stream = require('stream');
+
+const md5 = require('blueimp-md5');
+
 const db = require('../models/index');
 const proxy = require('./proxy');
 
@@ -13,35 +18,20 @@ function update(username, response) {
 		return;
 	}
 
-	let data = response.json;
-	let parsedData = [];
-	const unusedFields = [
-		'favorite',
-		'time_updated',
-		'time_favorited',
-		'sort_id',
-		'is_article',
-		'is_index',
-		'has_video',
-		'has_image'
-	];
+	let hash = md5(username);
 
-	for (let id in data) {
-		let article = data[id];
+	// TODO create directory if it does not exist
+	// get versionNum and create or update db entry
+	let readable = new stream.Readable({
+		encoding: 'utf8',
+		read: () => {}
+	});
+	readable.push(response.json);
 
-		unusedFields.forEach((elem) => {
-			delete article[elem];
-		});
+	let writable = fs.createWriteStream(`./user_data/${username}/version-${versionNum}`);
 
-		article.time_added = new Date(article.time_added * 1000);
-		article.time_read = new Date(article.time_read * 1000);
-
-		parsedData.push(parsedData);
-	}
-
-	db.Article.bulkCreate(parsedData).then(() => {
-		delete lock[username];
-	}).catch(() => {});
+	readable.pipe(writable);
+	writable.end();
 }
 
 function retrieve() {}
