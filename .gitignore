@@ -6,3 +6,5 @@ bower_components
 dist/
 npm-debug.log
 .sass-cache/
+style.css
+style.css.map

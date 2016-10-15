@@ -93,14 +93,30 @@ h1, h2, h3, h4, h5, h6 {
 	.navbar {
 		.navbar-brand {
 			font-family: "Shadows Into Light", cursive;
-			color: $BLUE;
+			color: white;
 			cursor: default;
 			font-size: 24px;
 		}
 
 		li > a {
-			color: $BLUE;
+			color: white;
 			cursor: default;
+
+			&#update {
+				cursor: pointer;
+				height: 30px;
+				width: 30px;
+				padding: 0;
+				margin: 10px;
+				background-image: url('/images/rotate.svg');
+				background-size: cover;
+				color: white;
+				transition: transform 0.5s linear;
+
+				&:hover {
+					transform: rotate(360deg);
+				}
+			}
 		}
 	}
 }

@@ -62,23 +62,24 @@ app.use(bodyParser.urlencoded({
 
 if (app.get('env') === 'development') {
 	app.use(sass({
-		root: path.join(__dirname, 'public'),
-		src: 'stylesheets',
-		dest: 'stylesheets',
-		indentedSyntax: true,
+		src: path.join(__dirname, 'public'),
+		dest: path.join(__dirname, 'public'),
+		indentedSyntax: false,
 		sourceMap: true,
 		debug: true,
-		outputStyle: 'expanded'
+		outputStyle: 'nested',
+		force: true,
+		response: false
 	}));
 } else {
 	app.use(sass({
-		root: path.join(__dirname, 'public'),
-		src: 'stylesheets',
-		dest: 'stylesheets',
-		indentedSyntax: true,
+		src: path.join(__dirname, 'public'),
+		dest: path.join(__dirname, 'public'),
+		indentedSyntax: false,
 		sourceMap: false,
 		debug: false,
-		outputStyle: 'compressed'
+		outputStyle: 'compressed',
+		response: false
 	}));
 }
 app.use(express.static(path.join(__dirname, 'public')));
