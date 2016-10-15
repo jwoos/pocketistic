@@ -5,5 +5,5 @@ bower_components
 .tmp/
 dist/
 npm-debug.log
-*.css
-*.css.map
+style.css
+style.css.map

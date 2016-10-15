@@ -1,10 +1,11 @@
 'use strict';
 
+const debug = require('debug')('pocketistic:authentication');
+const md5 = require('blueimp-md5');
 const request = require('request');
 
-const md5 = require('blueimp-md5');
-const db = require('../models/index');
 const data = require('../data');
+const db = require('../models/index');
 
 class Authenticator {
 	constructor(consumerKey, redirectUrl, state) {
@@ -44,7 +45,7 @@ class Authenticator {
 
 		request(options, (err, res, body) => {
 			if (err) {
-				console.log(err);
+				debug(err);
 				response.error = err;
 			} else {
 				response.statusCode = res.statusCode;
@@ -86,26 +87,29 @@ class Authenticator {
 
 		request(options, (err, res, body) => {
 			if (err) {
-				console.log(err);
+				debug(err);
 				response.error = err;
 			} else {
 				response.statusCode = res.statusCode;
 
 				if (res.statusCode === 200) {
 					this.authData.accessToken = JSON.parse(body).access_token;
-					this.userName = JSON.parse(body).username;
+					this.username = JSON.parse(body).username;
 
-					response.userName = this.userName;
+					response.username = this.username;
 					response.accessToken = this.authData.accessToken;
 
 					db.User.findOrCreate({
 						where: {
-							username: response.userName,
-							hash: md5(response.userName)
+							username: response.username
+						},
+						defaults: {
+							access_token: response.accessToken,
+							hash: md5(response.username)
 						}
 					});
 				} else {
-					console.log(res.headers);
+					debug(res.headers);
 					response.statusError = body;
 				}
 			}

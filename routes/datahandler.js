@@ -1,18 +1,16 @@
 'use strict';
 
+const debug = require('debug')('pocketistic:datahandler-route');
 const express = require('express');
 const router = express.Router();
 
-const proxy = require('../controllers/proxy');
 const datahandler = require('../controllers/datahandler');
 
-// proxy endpoints
-router.get('/retrieve', (req, res) => {
-	let getData = req.query;
+router.get('/update', (req, res) => {
 	let accessToken = req.session.accessToken;
 	let username = req.session.username;
 
-	proxy.retrieve(accessToken, getData, (response) => {
+	datahandler.proxyRetrieve(accessToken, (response) => {
 		if (response.error) {
 			res.status(502).send(response.error);
 		} else if (response.statusCode !== 200) {
@@ -25,6 +23,31 @@ router.get('/retrieve', (req, res) => {
 	});
 });
 
-router.get('/update', (req, res) => {});
+router.get('/retrieve', (req, res) => {
+	let accessToken = req.session.accessToken;
+	let username = req.session.username;
+
+	let data;
+	try {
+		data = datahandler.retrieve(username);
+		res.send(data);
+	} catch (e) {
+		debug('Error retrieving from local', e);
+
+/*
+ *        datahandler.proxyRetrieve(accessToken, (response) => {
+ *            if (response.error) {
+ *                res.status(502).send(response.error);
+ *            } else if (response.statusCode !== 200) {
+ *                res.status(response.statusCode).send(response.statusError);
+ *            } else {
+ *                datahandler.update(username, response.json);
+ *
+ *                res.send(response.json);
+ *            }
+ *        });
+ */
+	}
+});
 
 module.exports = router;

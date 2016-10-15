@@ -34,7 +34,7 @@ router.get('/access', (req, res, next) => {
 			res.status(response.statusCode).send(response.statusError);
 		} else {
 			sess.accessToken = response.accessToken;
-			sess.userName = response.userName;
+			sess.username = response.username;
 
 			res.send('Authenticated!');
 		}
