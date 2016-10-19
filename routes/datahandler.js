@@ -10,17 +10,7 @@ router.get('/update', (req, res) => {
 	let accessToken = req.session.accessToken;
 	let username = req.session.username;
 
-	datahandler.proxyRetrieve(accessToken, (response) => {
-		if (response.error) {
-			res.status(502).send(response.error);
-		} else if (response.statusCode !== 200) {
-			res.status(response.statusCode).send(response.statusError);
-		} else {
-			datahandler.update(username, response.json);
-
-			res.send(response.json);
-		}
-	});
+	update(res);
 });
 
 router.get('/retrieve', (req, res) => {
@@ -34,18 +24,22 @@ router.get('/retrieve', (req, res) => {
 	} catch (e) {
 		debug('Error retrieving from local', e);
 
-		datahandler.proxyRetrieve(accessToken, (response) => {
-			if (response.error) {
-				res.status(502).send(response.error);
-			} else if (response.statusCode !== 200) {
-				res.status(response.statusCode).send(response.statusError);
-			} else {
-				datahandler.update(username, response.json.list);
-
-				res.send(response.json.list);
-			}
-		});
+		update(res);
 	}
 });
+
+function update(res) {
+	datahandler.proxyRetrieve(accessToken, (response) => {
+		if (response.error) {
+			res.status(502).send(response.error);
+		} else if (response.statusCode !== 200) {
+			res.status(response.statusCode).send(response.statusError);
+		} else {
+			datahandler.update(username, response.json.list);
+
+			res.send(response.json.list);
+		}
+	});
+}
 
 module.exports = router;

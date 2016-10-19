@@ -44,7 +44,7 @@ function count(data) {
 		total++;
 	}
 
-	let averageWordCount = wordCount/ keys.length;
+	let averageWordCount = wordCount / keys.length;
 
 	return {
 		total: total,
@@ -56,17 +56,15 @@ function count(data) {
 	};
 }
 
-function composeGraph(data) {
+function composeDomainGraph(data) {
 	let rcolor = new RColor();
 
 	let chartData = {
 		labels: Object.keys(data),
 		datasets: [
 			{
-				label: 'domains',
 				backgroundColor: Array(Object.keys(data).length).fill(0).map(() => {
 					let arr = rcolor.get();
-					console.log(arr);
 					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
 				}),
 				borderWidth: 1,
@@ -84,6 +82,31 @@ function composeGraph(data) {
 	});
 }
 
+function composeCountGraph(data) {
+	let rcolor = new RColor();
+
+	let chartData = {
+		labels: ['unread', 'read'],
+		datasets: [
+			{
+				label: 'article count',
+				data: [data.unread, data.read],
+				borderWidth: 1,
+				backgroundColor: Array(2).fill(0).map(() => {
+					let arr = rcolor.get();
+					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
+				})
+			}
+		]
+	};
+
+	let ctx = document.getElementById('count-graph');
+	let chart = new Chart(ctx, {
+		type: 'pie',
+		data: chartData
+	});
+}
+
 $(document).ready(function() {
 	let data = {};
 
@@ -93,7 +116,8 @@ $(document).ready(function() {
 
 	$.get('/data/retrieve').done(function(response, textStatus, jqXHR) {
 		data.count = count(response);
-		composeGraph(data.count.domains);
+		composeCountGraph(data.count);
+		composeDomainGraph(data.count.domains);
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({
 			title: 'Oops',
@@ -111,6 +135,10 @@ $(document).ready(function() {
 			bound = rivets.bind($('body#home .col-md-12.main'), {
 				data: data
 			});
+
+			data.count = count(response);
+			composeCountGraph(data.count);
+			composeDomainGraph(data.count.domains);
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 			swal({
 				title: 'Oops',
