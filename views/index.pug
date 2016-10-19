@@ -23,12 +23,19 @@ html
 		div.container-fluid
 			div.row
 				div.col-md-12.main
-					p Total articles: {data.count.total}
-					p Read: {data.count.read}
-					p Unread: {data.count.unread}
-					p Total word count: {data.count.wordCount}
-					p Average words per article: {data.count.averageWordCount}
-					canvas#count-graph
+					//-p Total articles: {data.count.total}
+					//-p Read: {data.count.read}
+					//-p Unread: {data.count.unread}
+					div.row
+						div.col-md-6
+							div.card-1
+								p Article count
+								p Total: {data.count.total}
+								canvas#count-graph
+						div.col-md-6
+							div.card-1
+								p Total word count: {data.count.wordCount}
+								p Average words per article: {data.count.averageWordCount}
 					canvas#domain-graph
 
 

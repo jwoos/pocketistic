@@ -1,4 +1,5 @@
 @import "flex";
+@import "card";
 
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
@@ -117,6 +118,14 @@ h1, h2, h3, h4, h5, h6 {
 				&:hover {
 					transform: rotate(360deg);
 				}
+			}
+		}
+	}
+
+	.main {
+		.col-md-6 {
+			.card-1 {
+				width: 100%;
 			}
 		}
 	}
