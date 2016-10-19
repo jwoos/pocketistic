@@ -38,7 +38,7 @@ function update(username, response) {
 		user.set('last_update', new Date());
 		user.save();
 
-		return fs.writeFile(`${path}/data.json`, JSON.stringify(response));
+		return fs.writeFile(`${path}/data.json`, JSON.stringify(response.list));
 	}).catch(() => {
 		debug('Failed updating');
 	});
