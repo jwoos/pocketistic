@@ -1,6 +1,4 @@
 # Pocketistic
-[![Build Status](https://travis-ci.org/jwoos/web_pocketistic.svg?branch=master)](https://travis-ci.org/jwoos/web_pocketistic)
-[![Dependency Status](https://dependencyci.com/github/jwoos/web_pocketistic/badge)](https://dependencyci.com/github/jwoos/web_pocketistic)
 
 ## To do
 [here](https://github.com/jwoos/web_pocketistic/issues)
