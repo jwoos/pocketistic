@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 const datahandler = require('../controllers/datahandler');
+const validate = require('../utils/validation');
 
 router.get('/update', (req, res) => {
 	let accessToken = req.session.accessToken;
@@ -41,5 +42,23 @@ function update(res) {
 		}
 	});
 }
+
+router.post('/parsed', (req, res) => {
+	let data = req.body;
+
+	console.log(data);
+
+	if (!validate.validateParsedData(data)) {
+		return res.status(400).send('Invalid post data');
+	}
+
+	datahandler.saveParsed(req.session.username, data, (status) => {
+		if (status) {
+			res.status(201).send('Created data');
+		} else {
+			res.status(500).send('Error saving data');
+		}
+	});
+});
 
 module.exports = router;

@@ -46,7 +46,15 @@ function update(username, response) {
 
 function retrieve(username) {
 	let hash = md5(username);
-	let data = JSON.parse(fs.readFileSync(`./user_data/${hash}/data.json`));
+	let data;
+
+	try {
+		debug('retrieving parsed');
+		data = JSON.parse(fs.readFileSync(`./user_data/${hash}/parsed.json`));
+	} catch (e) {
+		debug('retrieving raw');
+		data = JSON.parse(fs.readFileSync(`./user_data/${hash}/data.json`));
+	}
 
 	return data;
 }
@@ -105,8 +113,28 @@ function proxyRetrieve(accessToken, fn) {
 	});
 }
 
+function saveParsed(username, data, fn) {
+	db.User.findOne({
+		where: {
+			username: username
+		}
+	}).then((userInstance) => {
+		let user = userInstance;
+
+		let path = `./user_data/${user.hash}`;
+
+		fs.writeFile(`${path}/parsed.json`, JSON.stringify(data));
+
+		fn(true);
+	}).catch(() => {
+		fn(false);
+		debug('Failed updating');
+	});
+}
+
 module.exports = {
 	proxyRetrieve: proxyRetrieve,
 	retrieve: retrieve,
-	update: update
+	update: update,
+	saveParsed: saveParsed
 };

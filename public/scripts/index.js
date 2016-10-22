@@ -115,9 +115,25 @@ $(document).ready(function() {
 	});
 
 	$.get('/data/retrieve').done(function(response, textStatus, jqXHR) {
-		data.count = count(response);
-		composeCountGraph(data.count);
-		composeDomainGraph(data.count.domains);
+		if (!response.count) {
+			data.count = count(response);
+			composeCountGraph(data.count);
+			composeDomainGraph(data.count.domains);
+
+			$.ajax({
+				type: 'POST',
+				url: '/data/parsed',
+				data: JSON.stringify(data),
+				success: () => {},
+				dataType: 'json',
+				contentType: 'application/json'
+			});
+		} else {
+			data.count = response.count;
+			composeCountGraph(data.count);
+			composeDomainGraph(data.count.domains);
+		}
+
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({
 			title: 'Oops',
