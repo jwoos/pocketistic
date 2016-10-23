@@ -14,6 +14,8 @@ function count(data) {
 	let unread = 0;
 	let read = 0;
 	let wordCount = 0;
+	let unreadWords = 0;
+	let readWords = 0;
 	let domains = {};
 
 	for (let i = 0; i < keys.length; i++) {
@@ -37,8 +39,10 @@ function count(data) {
 
 		if (article.time_read != '0') {
 			read++;
+			readWords += article.word_count;
 		} else {
 			unread++;
+			unreadWords += article.word_count;
 		}
 
 		total++;
@@ -52,7 +56,9 @@ function count(data) {
 		unread: unread,
 		wordCount: wordCount,
 		averageWordCount: averageWordCount,
-		domains: domains
+		domains: domains,
+		readWords: readWords,
+		unreadWords: unreadWords
 	};
 }
 
@@ -107,6 +113,31 @@ function composeCountGraph(data) {
 	});
 }
 
+function composeWordCountGraph(data) {
+	let rcolor = new RColor();
+
+	let chartData = {
+		labels: ['unread', 'read'],
+		datasets: [
+			{
+				label: 'word count',
+				data: [data.unreadWords, data.readWords],
+				borderWidth: 1,
+				backgroundColor: Array(2).fill(0).map(() => {
+					let arr = rcolor.get();
+					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
+				})
+			}
+		]
+	};
+
+	let ctx = document.getElementById('word-graph');
+	let chart = new Chart(ctx, {
+		type: 'pie',
+		data: chartData
+	});
+}
+
 $(document).ready(function() {
 	let data = {};
 
@@ -114,23 +145,24 @@ $(document).ready(function() {
 		data: data
 	});
 
-	$.get('/data/retrieve').done(function(response, textStatus, jqXHR) {
-		if (!response.count) {
-			data.count = count(response);
+	$.get('/data/').done(function(response, textStatus, jqXHR) {
+		if (!response.parsed) {
+			data.count = count(response.data);
 			composeCountGraph(data.count);
 			composeDomainGraph(data.count.domains);
 
 			$.ajax({
 				type: 'POST',
-				url: '/data/parsed',
+				url: '/data/parsed/update',
 				data: JSON.stringify(data),
 				success: () => {},
 				dataType: 'json',
 				contentType: 'application/json'
 			});
 		} else {
-			data.count = response.count;
+			data.count = response.data.count;
 			composeCountGraph(data.count);
+			composeWordCountGraph(data.count);
 			composeDomainGraph(data.count.domains);
 		}
 
@@ -143,7 +175,7 @@ $(document).ready(function() {
 	});
 
 	$('#update').on('click', () => {
-		$.get('/data/update').done(function(response, textStatus, jqXHR) {
+		$.get('/data/raw/update').done(function(response, textStatus, jqXHR) {
 			bound.unbind();
 
 			data = {};

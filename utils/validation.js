@@ -14,11 +14,16 @@ function validateParsedData(data) {
 }
 
 function validateRequest(req) {
+	console.log(req.session.accessToken);
+
 	if (!req.session.accessToken) {
 		return false;
 	}
+
+	return true;
 }
 
 module.exports = {
-	validateParsedData: validateParsedData
+	validateParsedData: validateParsedData,
+	validateRequest: validateRequest
 };

@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
 			primaryKey: true,
 			type: DataTypes.STRING
 		},
-		last_update: {
+		raw_update: {
+			allowNull: true,
+			type: DataTypes.DATE(6)
+		},
+		parsed_update: {
 			allowNull: true,
 			type: DataTypes.DATE(6)
 		},

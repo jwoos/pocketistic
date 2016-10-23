@@ -3,6 +3,7 @@
 const fs = require('fs');
 const stream = require('stream');
 
+const bluebird = require('bluebird');
 const debug = require('debug')('pocketistic:datahandler');
 const md5 = require('blueimp-md5');
 const request = require('request');
@@ -10,76 +11,79 @@ const request = require('request');
 const data = require('../data');
 const db = require('../models/index');
 
-let lock = {};
+let lock = {
+	raw: {},
+	parsed: {}
+};
 
-function update(username, response) {
-	if (lock[username]) {
-		debug(`lock: ${username}`);
-		return;
-	}
-
-	let user;
-
-	db.User.findOne({
+function retrieveLocal(username) {
+	return db.User.findOne({
 		where: {
 			username: username
 		}
-	}).then((userInstance) => {
-		user = userInstance;
+	}).then((user) => {
+		let basePath = `./user_data/${user.hash}`;
 
-		let path = `./user_data/${user.hash}`;
+		return new bluebird((resolve, reject) => {
+			fs.readFile(`${basePath}/parsed.json`, 'utf8', (err, data) => {
+				if (!err) {
+					debug('retrieved local parsed data');
 
-		try {
-			fs.mkdirSync(path);
-		} catch (e) {
-			debug(e);
-		}
+					resolve({
+						updated: false,
+						user: user,
+						parsed: true,
+						data: JSON.parse(data),
+						error: null
+					});
 
-		user.set('last_update', new Date());
-		user.save();
+					return;
+				}
 
-		return fs.writeFile(`${path}/data.json`, JSON.stringify(response.list));
-	}).catch(() => {
-		debug('Failed updating');
+				fs.readFile(`${basePath}/raw.json`, 'utf8', (err, data) => {
+					if (!err) {
+						debug('retrieved local raw data');
+
+						resolve({
+							updated: false,
+							user: user,
+							parsed: false,
+							data: JSON.parse(data),
+							error: null
+						});
+
+						return;
+					}
+
+					reject({
+						error: 'Unabled to read files',
+						user: user
+					});
+				});
+			});
+		});
+	}, () => {
+		debug('user not found');
+
+		return bluebird.reject({
+			error: 'USER_NOT_FOUND'
+		});
 	});
 }
 
-function retrieve(username) {
-	let hash = md5(username);
-	let data;
-
-	try {
-		debug('retrieving parsed');
-		data = JSON.parse(fs.readFileSync(`./user_data/${hash}/parsed.json`));
-	} catch (e) {
-		debug('retrieving raw');
-		data = JSON.parse(fs.readFileSync(`./user_data/${hash}/data.json`));
-	}
-
-	return data;
-}
-
-function proxyRetrieve(accessToken, fn) {
-	db.User.findOne({
+function retrieveProxy(username) {
+	return db.User.findOne({
 		where: {
-			access_token: accessToken
+			username: username
 		}
 	}).then((user) => {
-		if (!(user.last_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24))) {
-			fn({
-				statusCode: 403,
-				statusError: `You last updated: ${user.last_update}, updates are allowed once every two days currently`
+		if (!(user.raw_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24))) {
+			debug('can only update when older than two days');
+
+			return bluebird.reject({
+				error: 'Can only update once every two days'
 			});
-			return;
 		}
-
-		let response = {};
-
-		let getData = {
-			access_token: accessToken,
-			consumer_key: data.consumerKey,
-			state: 'all'
-		};
 
 		let options = {
 			url: `${data.apiBase}/get`,
@@ -88,53 +92,107 @@ function proxyRetrieve(accessToken, fn) {
 				'Content-Type': 'application/json; charset=UTF-8',
 				'X-Accept': 'application/json',
 			},
-			body: JSON.stringify(getData)
+			body: JSON.stringify({
+				access_token: user.access_token,
+				consumer_key: data.consumerKey,
+				state: 'all'
+			})
 		};
 
-		request(options, (err, res, body) => {
-			if (err) {
-				debug(err);
-				response.error = err;
-			} else {
-				response.statusCode = res.statusCode;
+		return new bluebird((resolve, reject) => {
+			request(options, (err, res, body) => {
+				if (err) {
+					debug(err);
+
+					return reject();
+				}
 
 				if (res.statusCode === 200) {
-					let respJson = JSON.parse(body);
-					response.json = respJson;
+					debug(body);
+					resolve({
+						updated: true,
+						user: user,
+						parsed: false,
+						data: JSON.parse(body).list,
+						error: null
+					});
 				} else {
 					debug(res.headers);
-					response.statusError = body;
+					resolve({
+						error: body
+					});
 				}
-			}
-
-			fn(response);
-	});
-
+			});
+		});
 	});
 }
 
-function saveParsed(username, data, fn) {
-	db.User.findOne({
+function saveRaw(user, data) {
+	if (lock.raw[user.username]) {
+		debug(`lock: ${user.username}`);
+		return;
+	}
+
+	let path = `./user_data/${user.hash}`;
+
+	try {
+		fs.mkdirSync(path);
+	} catch (e) {
+		debug(e);
+	}
+
+	user.set('raw_update', new Date());
+	user.save();
+
+	return new bluebird((resolve, reject) => {
+		fs.writeFile(`${path}/raw.json`, JSON.stringify(data), 'utf8', (err) => {
+			if (err) {
+				reject();
+			} else {
+				resolve();
+			}
+		});
+	});
+}
+
+function saveParsed(username, data) {
+	if (lock.parsed[username]) {
+		debug(`lock: ${username}`);
+		return;
+	}
+
+	return db.User.findOne({
 		where: {
 			username: username
 		}
-	}).then((userInstance) => {
-		let user = userInstance;
-
+	}).then((user) => {
 		let path = `./user_data/${user.hash}`;
 
-		fs.writeFile(`${path}/parsed.json`, JSON.stringify(data));
+		try {
+			fs.mkdirSync(path);
+		} catch (e) {
+			debug(e);
+		}
 
-		fn(true);
-	}).catch(() => {
-		fn(false);
-		debug('Failed updating');
+		user.set('parsed_update', new Date());
+		user.save();
+
+		return new bluebird((resolve, reject) => {
+			fs.writeFile(`${path}/parsed.json`, JSON.stringify(data), 'utf8', (err) => {
+				if (err) {
+					reject();
+				} else {
+					resolve();
+				}
+			});
+		});
 	});
+
 }
 
 module.exports = {
-	proxyRetrieve: proxyRetrieve,
-	retrieve: retrieve,
-	update: update,
-	saveParsed: saveParsed
+	saveParsed: saveParsed,
+	saveRaw: saveRaw,
+	retrieveLocal: retrieveLocal,
+	retrieveProxy: retrieveProxy
 };
