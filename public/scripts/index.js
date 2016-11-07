@@ -35,14 +35,14 @@ function count(data) {
 		}
 
 		let wc = article.word_count;
-		wordCount += wc? Number.parseInt(article.word_count, 10) : 0;
+		wordCount += wc? parseInt(article.word_count, 10) : 0;
 
 		if (article.time_read != '0') {
 			read++;
-			readWords += article.word_count;
+			readWords += parseInt(article.word_count);
 		} else {
 			unread++;
-			unreadWords += article.word_count;
+			unreadWords += parseInt(article.word_count);
 		}
 
 		total++;
@@ -149,6 +149,7 @@ $(document).ready(function() {
 		if (!response.parsed) {
 			data.count = count(response.data);
 			composeCountGraph(data.count);
+			composeWordCountGraph(data.count);
 			composeDomainGraph(data.count.domains);
 
 			$.ajax({
@@ -165,7 +166,6 @@ $(document).ready(function() {
 			composeWordCountGraph(data.count);
 			composeDomainGraph(data.count.domains);
 		}
-
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({
 			title: 'Oops',

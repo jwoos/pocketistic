@@ -123,8 +123,14 @@ h1, h2, h3, h4, h5, h6 {
 	}
 
 	.main {
+		.row {
+			margin-top: 15px;
+			margin-bottom: 15px;
+		}
+
 		.col-md-6 {
 			.card-1 {
+				margin: 0;
 				width: 100%;
 			}
 		}
