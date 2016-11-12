@@ -2,6 +2,11 @@
 
 module.exports = (sequelize, DataTypes) => {
 	let Stat = sequelize.define('Stat', {
+		id: {
+			primaryKey: true,
+			autoIncrement: true,
+			type: DataTypes.INTEGER
+		},
 		username: {
 			references: {
 				model: 'user',
@@ -38,5 +43,5 @@ module.exports = (sequelize, DataTypes) => {
 		timestamps: false,
 	});
 
-	return Session;
+	return Stat;
 };

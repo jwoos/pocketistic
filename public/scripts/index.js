@@ -96,7 +96,7 @@ function composeCountGraph(data) {
 		datasets: [
 			{
 				label: 'article count',
-				data: [data.unread, data.read],
+				data: [data.unread ? data.unread : data.unread_articles, data.read ? data.read : data.read_articles],
 				borderWidth: 1,
 				backgroundColor: Array(2).fill(0).map(() => {
 					let arr = rcolor.get();
@@ -121,7 +121,7 @@ function composeWordCountGraph(data) {
 		datasets: [
 			{
 				label: 'word count',
-				data: [data.unreadWords, data.readWords],
+				data: [data.unreadWords ? data.unreadWords : data.unread_words, data.readWords ? data.readWords : data.read_words],
 				borderWidth: 1,
 				backgroundColor: Array(2).fill(0).map(() => {
 					let arr = rcolor.get();
@@ -161,10 +161,10 @@ $(document).ready(function() {
 				contentType: 'application/json'
 			});
 		} else {
-			data.count = response.data.count;
-			composeCountGraph(data.count);
-			composeWordCountGraph(data.count);
-			composeDomainGraph(data.count.domains);
+			composeCountGraph(response.data.count);
+			composeWordCountGraph(response.data.count);
+			composeDomainGraph(response.data.count.domains);
+			//data.count = response.data.count;
 		}
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({

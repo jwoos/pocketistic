@@ -22,25 +22,26 @@ function retrieveLocal(username) {
 			username: username
 		}
 	}).then((user) => {
-		let basePath = `./user_data/${user.hash}`;
+		return db.Stat.findOne({
+			where: {
+				username: username
+			}
+		}).then((stat) => {
+			debug('retrieved local parsed data');
+			debug(stat.toJSON());
 
-		return new bluebird((resolve, reject) => {
-			fs.readFile(`${basePath}/parsed.json`, 'utf8', (err, data) => {
-				if (!err) {
-					debug('retrieved local parsed data');
+			return {
+				updated: false,
+				user: user.toJSON(),
+				parsed: true,
+				data: {count: stat.toJSON()},
+				error: null
+			};
+		}, () => {
+			let filePath = `./user_data/${user.hash}.json`;
 
-					resolve({
-						updated: false,
-						user: user,
-						parsed: true,
-						data: JSON.parse(data),
-						error: null
-					});
-
-					return;
-				}
-
-				fs.readFile(`${basePath}/raw.json`, 'utf8', (err, data) => {
+			return new bluebird((resolve, reject) => {
+				fs.readFile(filePath, 'utf8', (err, data) => {
 					if (!err) {
 						debug('retrieved local raw data');
 
@@ -161,33 +162,34 @@ function saveParsed(username, data) {
 		return;
 	}
 
-	return db.User.findOne({
-		where: {
-			username: username
-		}
-	}).then((user) => {
-		let path = `./user_data/${user.hash}`;
+	return bluebird.all([
+		db.User.findOne({
+			where: {
+				username: username
+			}
+		}),
+		db.Stat.findOrCreate({
+			where: {
+				username: username
+			}
+		})
+	]).then((result) => {
+		let user = result[0];
+		let stat = result[1][0];
 
-		try {
-			fs.mkdirSync(path);
-		} catch (e) {
-			debug(e);
-		}
+		stat.set('unread_words', data.count.unreadWords);
+		stat.set('read_words', data.count.readWords);
+		stat.set('read_articles', data.count.read);
+		stat.set('unread_articles', data.count.unread);
+		stat.set('domains', data.count.domains);
 
 		user.set('parsed_update', new Date());
-		user.save();
 
-		return new bluebird((resolve, reject) => {
-			fs.writeFile(`${path}/parsed.json`, JSON.stringify(data), 'utf8', (err) => {
-				if (err) {
-					reject();
-				} else {
-					resolve();
-				}
-			});
-		});
+		return bluebird.all([
+			stat.save(),
+			user.save()
+		]);
 	});
-
 }
 
 module.exports = {

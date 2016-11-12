@@ -66,6 +66,7 @@ router.post('/parsed/update', (req, res) => {
 	datahandler.saveParsed(username, data).then(() => {
 		res.status(201).send('Saved');
 	}).catch((e) => {
+		debug(e);
 		res.status(500).send('Error saving');
 	});
 });
