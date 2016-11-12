@@ -7,7 +7,7 @@ function getDomain(link) {
 	return matches[1];
 }
 
-function count(data) {
+function compute(data) {
 	let keys = Object.keys(data);
 
 	let total = 0;
@@ -63,14 +63,16 @@ function count(data) {
 }
 
 function composeDomainGraph(data) {
-	let rcolor = new RColor();
+	const rcolor = new RColor();
 
-	let chartData = {
+	console.log(data);
+
+	const chartData = {
 		labels: Object.keys(data),
 		datasets: [
 			{
 				backgroundColor: Array(Object.keys(data).length).fill(0).map(() => {
-					let arr = rcolor.get();
+					const arr = rcolor.get();
 					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
 				}),
 				borderWidth: 1,
@@ -81,17 +83,17 @@ function composeDomainGraph(data) {
 		]
 	};
 
-	let ctx = document.getElementById('domain-graph');
-	let chart = new Chart(ctx, {
+	const ctx = document.getElementById('domain-graph');
+	const chart = new Chart(ctx, {
 		type: 'bar',
 		data: chartData
 	});
 }
 
 function composeCountGraph(data) {
-	let rcolor = new RColor();
+	const rcolor = new RColor();
 
-	let chartData = {
+	const chartData = {
 		labels: ['unread', 'read'],
 		datasets: [
 			{
@@ -99,24 +101,24 @@ function composeCountGraph(data) {
 				data: [data.unread ? data.unread : data.unread_articles, data.read ? data.read : data.read_articles],
 				borderWidth: 1,
 				backgroundColor: Array(2).fill(0).map(() => {
-					let arr = rcolor.get();
+					const arr = rcolor.get();
 					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
 				})
 			}
 		]
 	};
 
-	let ctx = document.getElementById('count-graph');
-	let chart = new Chart(ctx, {
+	const ctx = document.getElementById('count-graph');
+	const chart = new Chart(ctx, {
 		type: 'pie',
 		data: chartData
 	});
 }
 
 function composeWordCountGraph(data) {
-	let rcolor = new RColor();
+	const rcolor = new RColor();
 
-	let chartData = {
+	const chartData = {
 		labels: ['unread', 'read'],
 		datasets: [
 			{
@@ -124,75 +126,61 @@ function composeWordCountGraph(data) {
 				data: [data.unreadWords ? data.unreadWords : data.unread_words, data.readWords ? data.readWords : data.read_words],
 				borderWidth: 1,
 				backgroundColor: Array(2).fill(0).map(() => {
-					let arr = rcolor.get();
+					const arr = rcolor.get();
 					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
 				})
 			}
 		]
 	};
 
-	let ctx = document.getElementById('word-graph');
-	let chart = new Chart(ctx, {
+	const ctx = document.getElementById('word-graph');
+	const chart = new Chart(ctx, {
 		type: 'pie',
 		data: chartData
 	});
 }
 
-$(document).ready(function() {
-	let data = {};
+let data;
 
-	let bound = rivets.bind($('body#home .col-md-12.main'), {
-		data: data
+$.get('/data/').done(function(response, textStatus, jqXHR) {
+	if (!response.parsed) {
+		data = compute(response.data);
+		$.ajax({
+			type: 'POST',
+			url: '/data/parsed/update',
+			data: JSON.stringify(data),
+			success: () => {},
+			dataType: 'json',
+			contentType: 'application/json'
+		});
+	} else {
+		data = response.data;
+	}
+
+	composeCountGraph(data);
+	composeWordCountGraph(data);
+	composeDomainGraph(data.domains);
+
+}).fail(function(jqXHR, textStatus, errorThrown) {
+	swal({
+		title: 'Oops',
+		type: 'error',
+		text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
 	});
+});
 
-	$.get('/data/').done(function(response, textStatus, jqXHR) {
-		if (!response.parsed) {
-			data.count = count(response.data);
-			composeCountGraph(data.count);
-			composeWordCountGraph(data.count);
-			composeDomainGraph(data.count.domains);
+$('#update').on('click', () => {
+	$.get('/data/raw/update').done(function(response, textStatus, jqXHR) {
+		data = compute(response);
 
-			$.ajax({
-				type: 'POST',
-				url: '/data/parsed/update',
-				data: JSON.stringify(data),
-				success: () => {},
-				dataType: 'json',
-				contentType: 'application/json'
-			});
-		} else {
-			composeCountGraph(response.data.count);
-			composeWordCountGraph(response.data.count);
-			composeDomainGraph(response.data.count.domains);
-			//data.count = response.data.count;
-		}
+		composeCountGraph(data);
+		composeWordCountGraph(data);
+		composeDomainGraph(data.domains);
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		swal({
 			title: 'Oops',
 			type: 'error',
 			text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
-		});
-	});
-
-	$('#update').on('click', () => {
-		$.get('/data/raw/update').done(function(response, textStatus, jqXHR) {
-			bound.unbind();
-
-			data = {};
-
-			bound = rivets.bind($('body#home .col-md-12.main'), {
-				data: data
-			});
-
-			data.count = count(response);
-			composeCountGraph(data.count);
-			composeDomainGraph(data.count.domains);
-		}).fail(function(jqXHR, textStatus, errorThrown) {
-			swal({
-				title: 'Oops',
-				type: 'error',
-				text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
-			});
 		});
 	});
 });

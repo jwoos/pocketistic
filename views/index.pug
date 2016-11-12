@@ -23,21 +23,18 @@ html
 		div.container-fluid
 			div.row
 				div.col-md-12.main
-					//-p Total articles: {data.count.total}
-					//-p Read: {data.count.read}
-					//-p Unread: {data.count.unread}
 					div.row
 						div.col-md-6
 							div.card-1
 								p Article count
-								p Total: {data.count.total}
-								p test
+								p Total: {data.total}
+								p -----------
 								canvas#count-graph
 						div.col-md-6
 							div.card-1
 								p Word count
-								p Total: {data.count.wordCount}
-								p Average per article: {data.count.averageWordCount}
+								p Total: {data.wordCount}
+								p Average per article: {data.averageWordCount}
 								canvas#word-graph
 					canvas#domain-graph
 
@@ -45,6 +42,5 @@ html
 	script(src='/scripts/vendor/jquery-3.1.0.min.js')
 	script(src='/scripts/vendor/sweetalert.min.js')
 	script(src='/scripts/vendor/chart.min.js')
-	script(src='/scripts/vendor/rivets.bundled.min.js')
 	script(src='/scripts/vendor/rcolor.js')
 	script(src='/scripts/index.js')

@@ -28,13 +28,12 @@ function retrieveLocal(username) {
 			}
 		}).then((stat) => {
 			debug('retrieved local parsed data');
-			debug(stat.toJSON());
 
 			return {
 				updated: false,
 				user: user.toJSON(),
 				parsed: true,
-				data: {count: stat.toJSON()},
+				data: stat.toJSON(),
 				error: null
 			};
 		}, () => {
