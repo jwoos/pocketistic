@@ -22,21 +22,9 @@ function retrieveLocal(username) {
 			username: username
 		}
 	}).then((user) => {
-		return db.Stat.findOne({
-			where: {
-				username: username
-			}
-		}).then((stat) => {
-			debug('retrieved local parsed data');
+		if (user.parsed_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24)) {
+			debug('parsed data out of date, updating');
 
-			return {
-				updated: false,
-				user: user.toJSON(),
-				parsed: true,
-				data: stat.toJSON(),
-				error: null
-			};
-		}, () => {
 			let filePath = `./user_data/${user.hash}.json`;
 
 			return new bluebird((resolve, reject) => {
@@ -61,7 +49,48 @@ function retrieveLocal(username) {
 					});
 				});
 			});
-		});
+		} else {
+			return db.Stat.findOne({
+				where: {
+					username: username
+				}
+			}).then((stat) => {
+				debug('retrieved local parsed data');
+
+				return {
+					updated: false,
+					user: user.toJSON(),
+					parsed: true,
+					data: stat.toJSON(),
+					error: null
+				};
+			}, () => {
+				let filePath = `./user_data/${user.hash}.json`;
+
+				return new bluebird((resolve, reject) => {
+					fs.readFile(filePath, 'utf8', (err, data) => {
+						if (!err) {
+							debug('retrieved local raw data');
+
+							resolve({
+								updated: false,
+								user: user,
+								parsed: false,
+								data: JSON.parse(data),
+								error: null
+							});
+
+							return;
+						}
+
+						reject({
+							error: 'Unabled to read files',
+							user: user
+						});
+					});
+				});
+			});
+		}
 	}, () => {
 		debug('user not found');
 
@@ -133,19 +162,13 @@ function saveRaw(user, data) {
 		return;
 	}
 
-	let path = `./user_data/${user.hash}`;
-
-	try {
-		fs.mkdirSync(path);
-	} catch (e) {
-		debug(e);
-	}
+	let filePath = `./user_data/${user.hash}.json`;
 
 	user.set('raw_update', new Date());
 	user.save();
 
 	return new bluebird((resolve, reject) => {
-		fs.writeFile(`${path}/raw.json`, JSON.stringify(data), 'utf8', (err) => {
+		fs.writeFile(filePath, JSON.stringify(data), 'utf8', (err) => {
 			if (err) {
 				reject();
 			} else {
@@ -176,11 +199,11 @@ function saveParsed(username, data) {
 		let user = result[0];
 		let stat = result[1][0];
 
-		stat.set('unread_words', data.count.unreadWords);
-		stat.set('read_words', data.count.readWords);
-		stat.set('read_articles', data.count.read);
-		stat.set('unread_articles', data.count.unread);
-		stat.set('domains', data.count.domains);
+		stat.set('unread_words', data.unreadWords);
+		stat.set('read_words', data.readWords);
+		stat.set('read_articles', data.read);
+		stat.set('unread_articles', data.unread);
+		stat.set('domains', data.domains);
 
 		user.set('parsed_update', new Date());
 

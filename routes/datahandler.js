@@ -47,7 +47,7 @@ router.get('/raw/update', (req, res) => {
 
 		res.send(result);
 	}).catch((e) => {
-		res.status(500).send('Server error');
+		res.status(400).send(e.error);
 	});
 });
 
