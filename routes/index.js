@@ -3,9 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const data = require('../data');
-
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
 	let sess = req.session;
 
 	if (sess.accessToken) {
@@ -15,7 +13,7 @@ router.get('/', (req, res, next) => {
 	}
 });
 
-router.get('/login', (req, res, next) => {
+router.get('/login', (req, res) => {
 	let sess = req.session;
 
 	if (sess.accessToken) {

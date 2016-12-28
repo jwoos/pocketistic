@@ -65,8 +65,6 @@ function compute(data) {
 function composeDomainGraph(data) {
 	const rcolor = new RColor();
 
-	console.log(data);
-
 	const chartData = {
 		labels: Object.keys(data),
 		datasets: [
@@ -84,7 +82,7 @@ function composeDomainGraph(data) {
 	};
 
 	const ctx = document.getElementById('domain-graph');
-	const chart = new Chart(ctx, {
+	new Chart(ctx, {
 		type: 'bar',
 		data: chartData
 	});
@@ -109,7 +107,7 @@ function composeCountGraph(data) {
 	};
 
 	const ctx = document.getElementById('count-graph');
-	const chart = new Chart(ctx, {
+	new Chart(ctx, {
 		type: 'pie',
 		data: chartData
 	});
@@ -134,7 +132,7 @@ function composeWordCountGraph(data) {
 	};
 
 	const ctx = document.getElementById('word-graph');
-	const chart = new Chart(ctx, {
+	new Chart(ctx, {
 		type: 'pie',
 		data: chartData
 	});
@@ -142,7 +140,7 @@ function composeWordCountGraph(data) {
 
 let data;
 
-$.get('/data/').done(function(response, textStatus, jqXHR) {
+$.get('/data/').done(function(response) {
 	if (!response.parsed) {
 		data = compute(response.data);
 		$.ajax({
@@ -170,7 +168,7 @@ $.get('/data/').done(function(response, textStatus, jqXHR) {
 });
 
 $('#update').on('click', () => {
-	$.get('/data/raw/update').done(function(response, textStatus, jqXHR) {
+	$.get('/data/raw/update').done(function(response) {
 		data = compute(response);
 
 		composeCountGraph(data);

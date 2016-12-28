@@ -36,8 +36,8 @@ module.exports = {
 				allowNull: true
 			}
 		});
-  },
-	down: (queryInterface, Sequelize) => {
+	},
+	down: (queryInterface) => {
 		return queryInterface.dropTable('stat');
-  }
+	}
 };

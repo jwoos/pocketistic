@@ -107,7 +107,7 @@ class Authenticator {
 							access_token: response.accessToken,
 							hash: md5(response.username)
 						}
-					}).spread((user, created) => {
+					}).spread((user) => {
 						user.access_token = response.accessToken;
 						user.save();
 					});

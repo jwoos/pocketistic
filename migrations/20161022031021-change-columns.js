@@ -13,7 +13,7 @@ module.exports = {
 		]);
 	},
 
-	down: function (queryInterface, Sequelize) {
+	down: function (queryInterface) {
 		return bluebird.all([
 			queryInterface.renameColumn('user', 'raw_update', 'last_update'),
 			queryInterface.removeColumn('user', 'parsed_update')
