@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}, {
 		classMethods: {
-			associate: (models) => {}
+			associate: () => {}
 		},
 		freezeTableName: true,
 		tableName: 'session',

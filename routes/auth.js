@@ -5,14 +5,12 @@ const router = express.Router();
 
 const Authenticator = require('../controllers/authentication');
 
-const db = require('../models/index');
-
 const data = require('../data');
 
 let authAgent = new Authenticator(data.consumerKey, `${data.url}/login?end=true`, '');
 
 // authentication endpoints
-router.get('/request', (req, res, next) => {
+router.get('/request', (req, res) => {
 	authAgent.retrieveRequestToken((response) => {
 		if (response.error) {
 			res.status(502).send(response.error);
@@ -24,7 +22,7 @@ router.get('/request', (req, res, next) => {
 	});
 });
 
-router.get('/access', (req, res, next) => {
+router.get('/access', (req, res) => {
 	let sess = req.session;
 
 	authAgent.retrieveAccessToken((response) => {

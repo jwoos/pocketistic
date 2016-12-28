@@ -5,7 +5,6 @@ const express = require('express');
 const router = express.Router();
 
 const datahandler = require('../controllers/datahandler');
-const errors = require('../utils/errors');
 const validate = require('../utils/validation');
 
 router.get('/', (req, res) => {
@@ -27,7 +26,7 @@ router.get('/', (req, res) => {
 			datahandler.saveRaw(innerResult.user, innerResult.data);
 
 			res.send(innerResult);
-		}).catch((e) => {
+		}).catch(() => {
 			res.status(500).send('Server error');
 		});
 	});
@@ -41,7 +40,7 @@ router.get('/raw/update', (req, res) => {
 	let username = req.session.username;
 
 	datahandler.retrieveProxy(username).then((result) => {
-		datahandler.saveRaw(result.user, result.data).catch((e) => {
+		datahandler.saveRaw(result.user, result.data).catch(() => {
 			debug('error saving');
 		});
 

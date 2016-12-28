@@ -21,7 +21,7 @@ $('.skew-button').click(function() {
 
 	setTimeout(function() {
 		$.get('/auth/request')
-			.done(function(data, textStatus, jqXHR) {
+			.done(function(data) {
 				window.location.href = data;
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				swal({
@@ -38,7 +38,7 @@ $('.skew-button').click(function() {
 
 if (location.search.indexOf('?end=true') > -1) {
 	$.get('/auth/access')
-		.done(function(data, textStatus, jqXHR) {
+		.done(function() {
 			window.location.href = '/';
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 			swal({

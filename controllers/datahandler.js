@@ -1,11 +1,9 @@
 'use strict';
 
 const fs = require('fs');
-const stream = require('stream');
 
 const bluebird = require('bluebird');
 const debug = require('debug')('pocketistic:datahandler');
-const md5 = require('blueimp-md5');
 const request = require('request');
 
 const data = require('../data');
