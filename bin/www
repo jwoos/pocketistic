@@ -10,13 +10,13 @@ const app = require('../app');
 const debug = require('debug')('pocketistic:server');
 const http = require('http');
 
-const data = require('../data');
+const config = require('../config');
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(data.port);
+const port = normalizePort(config.port);
 app.set('port', port);
 
 /**

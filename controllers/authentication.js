@@ -1,125 +1,105 @@
 'use strict';
 
-const debug = require('debug')('pocketistic:authentication');
+const debug = require('debug')('pocketistic:controller-authentication');
 const md5 = require('blueimp-md5');
 const request = require('request');
 
-const data = require('../data');
+const config = require('../config');
 const db = require('../models/index');
 
-class Authenticator {
-	constructor(consumerKey, redirectUrl, state) {
-		this._consumerKey = consumerKey;
-		this._redirectUrl = redirectUrl;
-		this._state = state;
+const retrieveRequestToken = () => {
+	const postData = {
+		consumer_key: config.consumerKey,
+		redirect_uri: `${config.url}/login?end=true`,
+		state: ''
+	};
 
-		this.requestPostData = {
-			consumer_key: consumerKey,
-			redirect_uri: redirectUrl,
-			state: state
-		};
+	const options = {
+		url: `${config.apiBase}${config.apiRequest}`,
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json; charset=UTF-8',
+			'X-Accept': 'application/json',
+		},
+		body: JSON.stringify(postData)
+	};
 
-		this.accessPostData = {
-			consumer_key: consumerKey,
-			code: ''
-		};
-
-		this.authData = {
-			consumer_key: consumerKey,
-			access_token: ''
-		};
-	}
-
-	retrieveRequestToken(fn) {
-		const response = {};
-
-		const options = {
-			url: data.apiRequest,
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json; charset=UTF-8',
-				'X-Accept': 'application/json',
-			},
-			body: JSON.stringify(this.requestPostData)
-		};
-
+	return new Promise((resolve, reject) => {
 		request(options, (err, res, body) => {
+			debug('requestToken:', err, res, body);
 			if (err) {
-				debug(err);
-				response.error = err;
+				reject(err);
 			} else {
-				response.statusCode = res.statusCode;
+				body = JSON.parse(body);
+				const statusIsOkay = res.statusCode === 200;
 
-				if (res.statusCode === 200) {
-					this._requestToken = JSON.parse(body).code;
-					this.accessPostData.code = this._requestToken;
+				const resolution = {
+					statusCode: res.statusCode,
+					redirect: statusIsOkay ? `${config.apiRedirect}?request_token=${body.code}&redirect_uri=${postData.redirect_uri}` : null,
+					statusError: statusIsOkay ? null : body,
+					requestToken: statusIsOkay ? body.code : null
+				};
 
-					const url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
-
-					response.redirect = url;
-				} else {
-					response.statusError = body;
-				}
+				resolve(resolution);
 			}
-
-			fn(response);
 		});
-	}
+	});
+};
 
-	retrieveAccessToken(fn) {
-		let response = {};
+const retrieveAccessToken = (requestToken) => {
+	const postData = {
+		consumer_key: config.consumerKey,
+		code: requestToken
+	};
 
-		if (!this._requestToken) {
-			response.error = 'Invalid request token';
-			fn(response);
-			return;
-		}
+	const options = {
+		url: `${config.apiBase}${config.apiAccess}`,
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json; charset=UTF-8',
+			'X-Accept': 'application/json',
+		},
+		body: JSON.stringify(postData)
+	};
 
-		let options = {
-			url: data.apiAccess,
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json; charset=UTF-8',
-				'X-Accept': 'application/json',
-			},
-			body: JSON.stringify(this.accessPostData)
-		};
-
+	return new Promise((resolve, reject) => {
 		request(options, (err, res, body) => {
+			debug('accessToken:', err, res, body);
 			if (err) {
-				debug(err);
-				response.error = err;
+				reject(err);
 			} else {
-				response.statusCode = res.statusCode;
+				body = JSON.parse(body);
+				const statusIsOkay = res.statusCode === 200;
 
-				if (res.statusCode === 200) {
-					this.authData.accessToken = JSON.parse(body).access_token;
-					this.username = JSON.parse(body).username;
+				const resolution = {
+					statusCode: res.statusCode,
+					username: statusIsOkay ? body.username : null,
+					accessToken: statusIsOkay ? body.access_token : null,
+					statusError: statusIsOkay ? null : body
+				};
 
-					response.username = this.username;
-					response.accessToken = this.authData.accessToken;
-
+				if (statusIsOkay) {
 					db.User.findOrCreate({
 						where: {
-							username: response.username
+							username: resolution.username
 						},
 						defaults: {
-							access_token: response.accessToken,
-							hash: md5(response.username)
+							access_token: resolution.accessToken,
+							hash: md5(resolution.username)
 						}
 					}).spread((user) => {
-						user.access_token = response.accessToken;
+						user.access_token = resolution.accessToken;
 						user.save();
 					});
-				} else {
-					debug(res.headers);
-					response.statusError = body;
 				}
+
+				resolve(resolution);
 			}
-
-			fn(response);
 		});
-	}
-}
+	});
+};
 
-module.exports = Authenticator;
+module.exports = {
+	retrieveAccessToken: retrieveAccessToken,
+	retrieveRequestToken: retrieveRequestToken
+};

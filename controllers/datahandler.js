@@ -6,7 +6,7 @@ const bluebird = require('bluebird');
 const debug = require('debug')('pocketistic:datahandler');
 const request = require('request');
 
-const data = require('../data');
+const config = require('../config');
 const db = require('../models/index');
 
 const lock = {
@@ -121,7 +121,7 @@ function retrieveProxy(username) {
 			},
 			body: JSON.stringify({
 				access_token: user.access_token,
-				consumer_key: data.consumerKey,
+				consumer_key: config.consumerKey,
 				state: 'all'
 			})
 		};

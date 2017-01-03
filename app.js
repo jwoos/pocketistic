@@ -2,21 +2,20 @@
 
 const path = require('path');
 
+const bodyParser = require('body-parser');
 const express = require('express');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
-const uuid = require('node-uuid');
+const pug = require('pug');
+const sass = require('node-sass-middleware');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
-const sass = require('node-sass-middleware');
-const pug = require('pug');
+const uuid = require('node-uuid');
 
-// routes
 const auth = require('./routes/auth');
 const datahandler = require('./routes/datahandler');
 const index = require('./routes/index');
 
-const data = require('./data');
+const config = require('./config');
 const db = require('./models/index');
 
 const app = express();
@@ -33,7 +32,7 @@ app.use(logger('dev'));
 const sess = {
 	store: new pgSession({
 		pg: db.pg,
-		conString: data.pgConnection,
+		conString: config.pgConnection,
 		tableName: 'session'
 	}),
 	secret: 'N#E1kbzbI$H!0E9%',
@@ -44,15 +43,11 @@ const sess = {
 		return uuid.v4();
 	},
 	cookie: {
-		secure: true,
+		secure: (app.get('env') === 'development') ? false : true,
 		httpOnly: true,
 		maxAge: 60 * 60 * 1000 * 24 * 7 // 7 days
 	}
 };
-
-if (app.get('env') === 'development') {
-	sess.cookie.secure = false;
-}
 
 app.use(session(sess));
 app.use(bodyParser.json());
@@ -82,6 +77,7 @@ if (app.get('env') === 'development') {
 		response: false
 	}));
 }
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
@@ -91,33 +87,18 @@ app.use('/data/', datahandler);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-	let err = new Error('Not Found');
+	const err = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });
 
 // error handlers
-
-if (app.get('env') === 'development') {
-	// development error handler
-	// will print stacktrace
-	app.use((err, req, res) => {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
+app.use((err, req, res) => {
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: (app.get('env') === 'development') ? err : {}
 	});
-} else {
-	// production error handler
-	// no stacktraces leaked to user
-	app.use((err, req, res) => {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: {}
-		});
-	});
-}
+});
 
 module.exports = app;
