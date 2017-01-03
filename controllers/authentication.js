@@ -31,9 +31,9 @@ class Authenticator {
 	}
 
 	retrieveRequestToken(fn) {
-		let response = {};
+		const response = {};
 
-		let options = {
+		const options = {
 			url: data.apiRequest,
 			method: 'POST',
 			headers: {
@@ -54,7 +54,7 @@ class Authenticator {
 					this._requestToken = JSON.parse(body).code;
 					this.accessPostData.code = this._requestToken;
 
-					let url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
+					const url = `https://getpocket.com/auth/authorize?request_token=${this._requestToken}&redirect_uri=${this._redirectUrl}`;
 
 					response.redirect = url;
 				} else {

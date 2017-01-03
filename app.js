@@ -30,7 +30,7 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 
-let sess = {
+const sess = {
 	store: new pgSession({
 		pg: db.pg,
 		conString: data.pgConnection,

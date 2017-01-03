@@ -9,7 +9,7 @@ const request = require('request');
 const data = require('../data');
 const db = require('../models/index');
 
-let lock = {
+const lock = {
 	raw: {},
 	parsed: {}
 };
@@ -23,7 +23,7 @@ function retrieveLocal(username) {
 		if (user.parsed_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24)) {
 			debug('parsed data out of date, updating');
 
-			let filePath = `./user_data/${user.hash}.json`;
+			const filePath = `./user_data/${user.hash}.json`;
 
 			return new bluebird((resolve, reject) => {
 				fs.readFile(filePath, 'utf8', (err, data) => {
@@ -63,7 +63,7 @@ function retrieveLocal(username) {
 					error: null
 				};
 			}, () => {
-				let filePath = `./user_data/${user.hash}.json`;
+				const filePath = `./user_data/${user.hash}.json`;
 
 				return new bluebird((resolve, reject) => {
 					fs.readFile(filePath, 'utf8', (err, data) => {
@@ -112,7 +112,7 @@ function retrieveProxy(username) {
 			});
 		}
 
-		let options = {
+		const options = {
 			url: `${data.apiBase}/get`,
 			method: 'POST',
 			headers: {
@@ -160,7 +160,7 @@ function saveRaw(user, data) {
 		return;
 	}
 
-	let filePath = `./user_data/${user.hash}.json`;
+	const filePath = `./user_data/${user.hash}.json`;
 
 	user.set('raw_update', new Date());
 	user.save();
@@ -194,8 +194,8 @@ function saveParsed(username, data) {
 			}
 		})
 	]).then((result) => {
-		let user = result[0];
-		let stat = result[1][0];
+		const user = result[0];
+		const stat = result[1][0];
 
 		stat.set('unread_words', data.unreadWords);
 		stat.set('read_words', data.readWords);
