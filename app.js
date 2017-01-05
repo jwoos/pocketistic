@@ -39,9 +39,7 @@ const sess = {
 	name: 'sessionId',
 	resave: false,
 	saveUninitialized: false,
-	genid: () => {
-		return uuid.v4();
-	},
+	genid: () => uuid.v4(),
 	cookie: {
 		secure: (app.get('env') === 'development') ? false : true,
 		httpOnly: true,

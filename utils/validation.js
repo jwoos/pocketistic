@@ -10,7 +10,7 @@ const validateParsedData = (data) => {
 	}
 
 	return true;
-}
+};
 
 const validateRequest = (req) => {
 	if (!req.session.accessToken) {
@@ -18,7 +18,7 @@ const validateRequest = (req) => {
 	}
 
 	return true;
-}
+};
 
 module.exports = {
 	validateParsedData,
