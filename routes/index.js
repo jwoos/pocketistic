@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('pocketistic:route-index');
 const express = require('express');
 const router = express.Router();
 

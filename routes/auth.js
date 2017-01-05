@@ -1,12 +1,10 @@
 'use strict';
 
+const debug = require('debug')('pocketistic:route-authentication');
 const express = require('express');
 const router = express.Router();
-const debug = require('debug')('pocketistic:route-authentication');
 
 const authentication = require('../controllers/authentication');
-
-const config = require('../config');
 
 // authentication endpoints
 router.get('/request', (req, res) => {

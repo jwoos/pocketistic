@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('pocketistic:datahandler-route');
+const debug = require('debug')('pocketistic:route-datahandler');
 const express = require('express');
 const router = express.Router();
 
