@@ -8,7 +8,28 @@ const constants = {
 	apiRedirect: 'https://getpocket.com/auth/authorize',
 	pgConnection: process.env.DATABASE_URL || 'postgres://postgres:123456789@localhost/pocketistic',
 	port: process.env.PORT || 8080,
-	url: process.env.NODE_ENV ? 'https://sheltered-badlands-26515.herokuapp.com' : 'http://dev-server.site'
+	url: process.env.NODE_ENV ? 'https://sheltered-badlands-26515.herokuapp.com' : 'http://dev-server.site',
+	envs: {
+		development: {
+			url: 'postgres://postgres:123456789@localhost/pocketistic',
+			dialect: 'postgres',
+			seeder_storage: 'sequelize'
+		},
+		test: {
+			username: 'root',
+			password: null,
+			database: 'pocketistic',
+			host: '127.0.0.1',
+			dialect: 'postgres'
+		},
+		production: {
+			url: {
+				use_env_variable: 'process.env.DATABASE_URL'
+			},
+			dialect: 'postgres',
+			seeder_storage: 'sequelize'
+		}
+	}
 };
 
 module.exports = constants;
