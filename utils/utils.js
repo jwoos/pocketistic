@@ -34,7 +34,15 @@ function transformKeys(obj, type = 'camel') {
 	return obj;
 }
 
+function getDomain(link) {
+	const re = /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/;
+	const matches = link.match(re);
+
+	return matches[1];
+}
+
 module.exports = {
-	snakeToCamel: snakeToCamel
+	snakeToCamel,
+	getDomain
 };
 

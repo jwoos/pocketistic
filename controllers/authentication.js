@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('pocketistic:controller-authentication');
 const md5 = require('blueimp-md5');
 const request = require('request');
 
@@ -26,7 +25,6 @@ const retrieveRequestToken = () => {
 
 	return new Promise((resolve, reject) => {
 		request(options, (err, res, body) => {
-			debug('requestToken:', err, res, body);
 			if (err) {
 				reject(err);
 			} else {
@@ -64,7 +62,6 @@ const retrieveAccessToken = (requestToken) => {
 
 	return new Promise((resolve, reject) => {
 		request(options, (err, res, body) => {
-			debug('accessToken:', err, res, body);
 			if (err) {
 				reject(err);
 			} else {

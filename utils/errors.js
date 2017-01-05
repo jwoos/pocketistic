@@ -8,5 +8,9 @@ module.exports = {
 	USER_NOT_FOUND: {
 		text: 'User is not found',
 		status: 404
+	},
+	UPDATE_TIME_NOT_REACHED: {
+		text: 'Updates can occur once daily',
+		status: 403
 	}
 };
