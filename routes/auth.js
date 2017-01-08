@@ -1,41 +1,50 @@
 'use strict';
 
+const debug = require('debug')('pocketistic:route-authentication');
 const express = require('express');
 const router = express.Router();
 
-const Authenticator = require('../controllers/authentication');
-
-const data = require('../data');
-
-let authAgent = new Authenticator(data.consumerKey, `${data.url}/login?end=true`, '');
+const authentication = require('../controllers/authentication');
 
 // authentication endpoints
 router.get('/request', (req, res) => {
-	authAgent.retrieveRequestToken((response) => {
-		if (response.error) {
-			res.status(502).send(response.error);
-		} else if (response.statusCode !== 200) {
-			res.status(response.statusCode).send(response.statusError);
+	const sess = req.session;
+
+	authentication.retrieveRequestToken().then((resolution) => {
+		if (resolution.statusCode !== 200) {
+			res.status(resolution.statusCode).send(resolution.statusError);
 		} else {
-			res.send(response.redirect);
+			sess.requestToken = resolution.requestToken;
+
+			res.send(resolution.redirect);
 		}
+	}, (e) => {
+		res.status(502).send(e);
+	}).catch((e) => {
+		debug(e);
+
+		res.status(500).send('Error try again later!');
 	});
 });
 
 router.get('/access', (req, res) => {
-	let sess = req.session;
+	const sess = req.session;
 
-	authAgent.retrieveAccessToken((response) => {
-		if (response.error) {
-			res.status(502).send(response.error);
-		} else if (response.statusCode !== 200) {
-			res.status(response.statusCode).send(response.statusError);
+	authentication.retrieveAccessToken(sess.requestToken).then((resolution) => {
+		if (resolution.statusCode !== 200) {
+			res.status(resolution.statusCode).send(resolution.statusError);
 		} else {
-			sess.accessToken = response.accessToken;
-			sess.username = response.username;
+			sess.accessToken = resolution.accessToken;
+			sess.username = resolution.username;
 
 			res.send('Authenticated!');
 		}
+	}, (e) => {
+		res.status(502).send(e);
+	}).catch((e) => {
+		debug(e);
+
+		res.status(500).send('Error try again later!');
 	});
 });
 

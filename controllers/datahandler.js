@@ -3,200 +3,150 @@
 const fs = require('fs');
 
 const bluebird = require('bluebird');
-const debug = require('debug')('pocketistic:datahandler');
+const debug = require('debug')('pocketistic:controller-datahandler');
 const request = require('request');
 
-const data = require('../data');
+const config = require('../config');
 const db = require('../models/index');
+const utils = require('../utils/utils');
 
-let lock = {
+const lock = {
 	raw: {},
 	parsed: {}
 };
 
-function retrieveLocal(username) {
+const getUserByUsername = (username) => {
 	return db.User.findOne({
 		where: {
 			username: username
 		}
-	}).then((user) => {
-		if (user.parsed_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24)) {
-			debug('parsed data out of date, updating');
+	});
+};
 
-			let filePath = `./user_data/${user.hash}.json`;
+const retrieveLocalRaw = (user) => {
+	const filePath = `./user_data/${user.hash}.json`;
+	const resolution = {
+		parsed: false,
+		user: user.toJSON(),
+		data: null,
+		error: null,
+		updated: user.raw_update
+	};
 
-			return new bluebird((resolve, reject) => {
-				fs.readFile(filePath, 'utf8', (err, data) => {
-					if (!err) {
-						debug('retrieved local raw data');
+	return new bluebird((resolve, reject) => {
+		fs.readFile(filePath, 'utf8', (err, data) => {
+			if (err) {
+				resolution.error = err;
 
-						resolve({
-							updated: false,
-							user: user,
-							parsed: false,
-							data: JSON.parse(data),
-							error: null
-						});
+				reject(resolution);
+			} else {
+				resolution.data = JSON.parse(data);
 
-						return;
-					}
+				resolve(resolution);
+			}
 
-					reject({
-						error: 'Unabled to read files',
-						user: user
-					});
-				});
-			});
-		} else {
-			return db.Stat.findOne({
-				where: {
-					username: username
-				}
-			}).then((stat) => {
-				debug('retrieved local parsed data');
-
-				return {
-					updated: false,
-					user: user.toJSON(),
-					parsed: true,
-					data: stat.toJSON(),
-					error: null
-				};
-			}, () => {
-				let filePath = `./user_data/${user.hash}.json`;
-
-				return new bluebird((resolve, reject) => {
-					fs.readFile(filePath, 'utf8', (err, data) => {
-						if (!err) {
-							debug('retrieved local raw data');
-
-							resolve({
-								updated: false,
-								user: user,
-								parsed: false,
-								data: JSON.parse(data),
-								error: null
-							});
-
-							return;
-						}
-
-						reject({
-							error: 'Unabled to read files',
-							user: user
-						});
-					});
-				});
-			});
-		}
-	}, () => {
-		debug('user not found');
-
-		return bluebird.reject({
-			error: 'USER_NOT_FOUND'
 		});
 	});
-}
+};
 
-function retrieveProxy(username) {
-	return db.User.findOne({
+const retrieveLocalParsed = (user) => {
+	const resolution = {
+		parsed: true,
+		user: user.toJSON(),
+		data: null,
+		error: null,
+		updated: user.parsed_update
+	};
+
+	return db.Stat.findOne({
 		where: {
-			username: username
+			username: user.username
 		}
-	}).then((user) => {
-		if (!(user.raw_update < new Date(Date.now() - 2 * 1000 * 60 * 60 * 24))) {
-			debug('can only update when older than two days');
+	}).then((stat) => {
+		resolution.data = stat.toJSON();
 
-			return bluebird.reject({
-				error: 'Can only update once every two days'
-			});
-		}
+		return resolution;
+	}, (err) => {
+		resolution.error = err;
 
-		let options = {
-			url: `${data.apiBase}/get`,
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json; charset=UTF-8',
-				'X-Accept': 'application/json',
-			},
-			body: JSON.stringify({
-				access_token: user.access_token,
-				consumer_key: data.consumerKey,
-				state: 'all'
-			})
-		};
+		return bluebird.reject(resolution);
+	});
+};
 
-		return new bluebird((resolve, reject) => {
-			request(options, (err, res, body) => {
-				if (err) {
-					debug(err);
+const retrieveProxy = (user) => {
+	const resolution = {
+		parsed: false,
+		user: user.toJSON(),
+		data: null,
+		error: null,
+		updated: user.raw_update
+	};
 
-					return reject();
-				}
+	const options = {
+		url: `${config.apiBase}/get`,
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json; charset=UTF-8',
+			'X-Accept': 'application/json',
+		},
+		body: JSON.stringify({
+			access_token: user.access_token,
+			consumer_key: config.consumerKey,
+			state: 'all'
+		})
+	};
 
-				if (res.statusCode === 200) {
-					debug(body);
-					resolve({
-						updated: true,
-						user: user,
-						parsed: false,
-						data: JSON.parse(body).list,
-						error: null
-					});
-				} else {
-					debug(res.headers);
-					resolve({
-						error: body
-					});
-				}
-			});
+	return new bluebird((resolve, reject) => {
+		request(options, (err, res, body) => {
+			if (err) {
+				resolution.error = err;
+				return reject(resolution);
+			}
+
+			if (res.statusCode === 200) {
+				resolution.data = JSON.parse(body).list;
+
+				resolve(resolution);
+			} else {
+				resolution.error = body;
+
+				reject(resolution);
+			}
 		});
 	});
-}
+};
 
-function saveRaw(user, data) {
+const saveRaw = (user, data) => {
 	if (lock.raw[user.username]) {
-		debug(`lock: ${user.username}`);
-		return;
+		return bluebird.resolve();
 	}
 
-	let filePath = `./user_data/${user.hash}.json`;
-
-	user.set('raw_update', new Date());
-	user.save();
+	const filePath = `./user_data/${user.hash}.json`;
 
 	return new bluebird((resolve, reject) => {
 		fs.writeFile(filePath, JSON.stringify(data), 'utf8', (err) => {
 			if (err) {
-				reject();
+				reject(err);
 			} else {
 				resolve();
 			}
 		});
+	}).then(() => {
+		user.set('raw_update', new Date());
+		return user.save();
 	});
-}
+};
 
-function saveParsed(username, data) {
-	if (lock.parsed[username]) {
-		debug(`lock: ${username}`);
-		return;
+const saveParsed = (user, data) => {
+	if (lock.parsed[user.username]) {
+		return bluebird.resolve();
 	}
 
-	return bluebird.all([
-		db.User.findOne({
-			where: {
-				username: username
-			}
-		}),
-		db.Stat.findOrCreate({
-			where: {
-				username: username
-			}
-		})
-	]).then((result) => {
-		let user = result[0];
-		let stat = result[1][0];
-
+	return db.Stat.findOrCreate({
+		where: {
+			username: user.username
+		}
+	}).spread((stat) => {
 		stat.set('unread_words', data.unreadWords);
 		stat.set('read_words', data.readWords);
 		stat.set('read_articles', data.read);
@@ -210,11 +160,105 @@ function saveParsed(username, data) {
 			user.save()
 		]);
 	});
-}
+};
+
+const parse = (data) => {
+	const keys = Object.keys(data);
+
+	let total = 0;
+	let unread = 0;
+	let read = 0;
+	let wordCount = 0;
+	let unreadWords = 0;
+	let readWords = 0;
+	let domains = {};
+
+	for (let i = 0; i < keys.length; i++) {
+		const article = data[keys[i]];
+
+		if (!article.resolved_url) {
+			delete data[keys[i]];
+			continue;
+		}
+
+		const domain = utils.getDomain(article.resolved_url);
+
+		if (domains[domain]) {
+			domains[domain]++;
+		} else {
+			domains[domain] = 1;
+		}
+
+		const wc = article.word_count;
+		wordCount += wc ? parseInt(article.word_count, 10) : 0;
+
+		if (article.time_read != '0') {
+			read++;
+			readWords += parseInt(article.word_count);
+		} else {
+			unread++;
+			unreadWords += parseInt(article.word_count);
+		}
+
+		total++;
+	}
+
+	const averageWordCount = wordCount / keys.length;
+
+	return {
+		total,
+		read,
+		unread,
+		wordCount,
+		averageWordCount,
+		domains,
+		readWords,
+		unreadWords
+	};
+};
+
+const update = (user) => {
+	debug('updating data');
+	return retrieveProxy(user).then((resolution) => {
+		const data = resolution.data;
+		const parsed = parse(data);
+
+		return bluebird.all([
+			saveRaw(user, data),
+			saveParsed(user, parsed)
+		]);
+	});
+};
+
+const retrieve = (username, shouldUpdate) => {
+	const resolution = {
+		parsed: null,
+		user: null,
+		data: null,
+		updated: null
+	};
+
+	let user;
+
+	return getUserByUsername(username).then((u) => {
+		user = u;
+		resolution.user = user.toJSON();
+
+		let promise = bluebird.resolve();
+
+		if (shouldUpdate || (user.raw_update <= new Date(Date.now() - 2 * 1000 * 60 * 60 * 24))) {
+			promise = update(user);
+		}
+
+		return promise.then(() => {
+			return retrieveLocalParsed(user);
+		});
+	});
+};
 
 module.exports = {
-	saveParsed: saveParsed,
-	saveRaw: saveRaw,
-	retrieveLocal: retrieveLocal,
-	retrieveProxy: retrieveProxy
+	retrieveProxy,
+	retrieveLocalRaw,
+	retrieveLocalParsed,
+	retrieve
 };

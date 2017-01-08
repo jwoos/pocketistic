@@ -1,6 +1,6 @@
 'use strict';
 
-function validateParsedData(data) {
+const validateParsedData = (data) => {
 	if (!data) {
 		return false;
 	}
@@ -10,17 +10,17 @@ function validateParsedData(data) {
 	}
 
 	return true;
-}
+};
 
-function validateRequest(req) {
+const validateRequest = (req) => {
 	if (!req.session.accessToken) {
 		return false;
 	}
 
 	return true;
-}
+};
 
 module.exports = {
-	validateParsedData: validateParsedData,
-	validateRequest: validateRequest
+	validateParsedData,
+	validateRequest
 };

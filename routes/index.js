@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-	let sess = req.session;
+	const sess = req.session;
 
 	if (sess.accessToken) {
 		res.render('index', {username: sess.username});
@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-	let sess = req.session;
+	const sess = req.session;
 
 	if (sess.accessToken) {
 		res.redirect('/');
