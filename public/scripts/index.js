@@ -93,18 +93,20 @@ $.get('/data/').done(function(response) {
 	});
 });
 
-$('#update').on('click', () => {
-	$.get('/data/raw/update').done(function(response) {
-		data = compute(response);
-
-		composeCountGraph(data);
-		composeWordCountGraph(data);
-		composeDomainGraph(data.domains);
-	}).fail(function(jqXHR, textStatus, errorThrown) {
-		swal({
-			title: 'Oops',
-			type: 'error',
-			text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
-		});
-	});
-});
+/*
+ *$('#update').on('click', () => {
+ *  $.get('/data/raw/update').done(function(response) {
+ *    data = compute(response);
+ *
+ *    composeCountGraph(data);
+ *    composeWordCountGraph(data);
+ *    composeDomainGraph(data.domains);
+ *  }).fail(function(jqXHR, textStatus, errorThrown) {
+ *    swal({
+ *      title: 'Oops',
+ *      type: 'error',
+ *      text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
+ *    });
+ *  });
+ *});
+ */

@@ -8,7 +8,6 @@ const request = require('request');
 
 const config = require('../config');
 const db = require('../models/index');
-const errors = require('../utils/errors');
 const utils = require('../utils/utils');
 
 const lock = {
@@ -70,7 +69,7 @@ const retrieveLocalParsed = (user) => {
 	}, (err) => {
 		resolution.error = err;
 
-		return bluebird.reject(resolution)
+		return bluebird.reject(resolution);
 	});
 };
 
@@ -231,14 +230,14 @@ const update = (user) => {
 	});
 };
 
-const retrieve = (username, shouldUpdate, config) => {
+const retrieve = (username, shouldUpdate) => {
 	const resolution = {
 		parsed: null,
 		user: null,
 		data: null,
 		updated: null
 	};
-	config = config || {};
+
 	let user;
 
 	return getUserByUsername(username).then((u) => {

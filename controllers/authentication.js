@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('pocketistic:controller-authentication');
 const md5 = require('blueimp-md5');
 const request = require('request');
 
