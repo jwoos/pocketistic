@@ -8,7 +8,7 @@ const pg = require('pg');
 
 const basename = path.basename(module.filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config').envs[env];
+const config = require('../config')[env];
 const db = {};
 
 let sequelize;

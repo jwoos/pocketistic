@@ -17,13 +17,13 @@ port-reroute:
 	sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
 
 migration:
-	sequelize db:migrate
+	sequelize db:migrate --config config.js
 
 undo-migration:
-	sequelize db:migrate:undo:all
+	sequelize db:migrate:undo:all --config config.js
 
 generate-migration:
-	sequelize migration:create --name ${NAME}
+	sequelize migration:create --name ${NAME} --config config.js
 
 generate-model:
-	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES}
+	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES} --config config.js

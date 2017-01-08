@@ -219,7 +219,7 @@ const parse = (data) => {
 
 const update = (user) => {
 	debug('updating data');
-	retrieveProxy(user).then((resolution) => {
+	return retrieveProxy(user).then((resolution) => {
 		const data = resolution.data;
 		const parsed = parse(data);
 
