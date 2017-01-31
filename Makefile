@@ -16,6 +16,9 @@ heroku-psql:
 port-reroute:
 	sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
 
+port-reroute-new:
+	sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 8080
+
 migration:
 	sequelize db:migrate --config config.js
 
