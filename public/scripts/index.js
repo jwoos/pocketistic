@@ -78,23 +78,22 @@ function composeWordCountGraph(data) {
 
 let data;
 
-$.get('/data/').done(function(response) {
-	data = response.data;
+axios.get('/data/').then(function(response) {
+	data = response.data.data;
 
 	composeCountGraph(data);
 	composeWordCountGraph(data);
 	composeDomainGraph(data.domains);
-
-}).fail(function(jqXHR, textStatus, errorThrown) {
+}).catch(function(error) {
 	swal({
 		title: 'Oops',
 		type: 'error',
-		text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
+		text: `${error.response.status}: ${error.response.data}`
 	});
 });
 
 /*
- *$('#update').on('click', () => {
+ *document.querySelector('#update').addEventListener('click', () => {
  *  $.get('/data/raw/update').done(function(response) {
  *    data = compute(response);
  *

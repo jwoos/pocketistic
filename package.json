@@ -8,6 +8,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "bluebird": "^3.4.6",
     "blueimp-md5": "^2.4.0",
     "body-parser": "~1.13.2",
