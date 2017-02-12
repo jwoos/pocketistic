@@ -1,6 +1,6 @@
 'use strict';
 
-function composeDomainGraph(data) {
+const composeDomainGraph = (data) => {
 	const rcolor = new RColor();
 
 	const chartData = {
@@ -26,7 +26,7 @@ function composeDomainGraph(data) {
 	});
 }
 
-function composeCountGraph(data) {
+const composeCountGraph = (data) {
 	const rcolor = new RColor();
 
 	const chartData = {
@@ -51,7 +51,7 @@ function composeCountGraph(data) {
 	});
 }
 
-function composeWordCountGraph(data) {
+const composeWordCountGraph = (data) => {
 	const rcolor = new RColor();
 
 	const chartData = {
@@ -78,13 +78,13 @@ function composeWordCountGraph(data) {
 
 let data;
 
-axios.get('/data/').then(function(response) {
+axios.get('/data/').then((response) => {
 	data = response.data.data;
 
 	composeCountGraph(data);
 	composeWordCountGraph(data);
 	composeDomainGraph(data.domains);
-}).catch(function(error) {
+}).catch((error) => {
 	swal({
 		title: 'Oops',
 		type: 'error',
@@ -92,20 +92,18 @@ axios.get('/data/').then(function(response) {
 	});
 });
 
-/*
- *document.querySelector('#update').addEventListener('click', () => {
- *  $.get('/data/raw/update').done(function(response) {
- *    data = compute(response);
- *
- *    composeCountGraph(data);
- *    composeWordCountGraph(data);
- *    composeDomainGraph(data.domains);
- *  }).fail(function(jqXHR, textStatus, errorThrown) {
- *    swal({
- *      title: 'Oops',
- *      type: 'error',
- *      text: `${jqXHR.status}: ${errorThrown}\n${jqXHR.responseText}`
- *    });
- *  });
- *});
- */
+document.querySelector('#update').addEventListener('click', () => {
+	axios.get('/data/raw/update').then((response) => {
+		data = compute(response.data);
+
+		composeCountGraph(data);
+		composeWordCountGraph(data);
+		composeDomainGraph(data.domains);
+	}).catch((error) => {
+		swal({
+			title: 'Oops',
+			type: 'error',
+			text: `${error.response.status}: ${error.response.data}`
+		});
+	});
+});

@@ -3,7 +3,7 @@
 const body = document.querySelector('body');
 const bodyBoundingClientRect = body.getBoundingClientRect();
 
-var pattern = Trianglify({
+const pattern = Trianglify({
 	height: bodyBoundingClientRect.height,
 	width: bodyBoundingClientRect.width,
 	cell_size: 60,
@@ -16,20 +16,20 @@ body.style.backgroundImage = 'url(' + pattern.png() + ')';
 
 if (location.search.indexOf('?end=true') > -1) {
 	axios.get('/auth/access')
-		.then(function() {
+		.then(() => {
 			window.location.href = '/';
-		}).catch(function(error) {
+		}).catch((error) => {
 			swal({
 				title: 'Oops',
 				type: 'error',
 				text: `${error.response.status}: ${error.response.data}`,
 				allowEscapeKey: false
-			}, function() {
+			}, () => {
 				window.location.href = '/';
 			});
 		});
 } else {
-	document.querySelector('.skew-button').addEventListener('click', function() {
+	document.querySelector('.skew-button').addEventListener('click', () => {
 		swal({
 			title: 'Redirecting',
 			text: 'You will be redirected to Pocket to sign in',
@@ -37,23 +37,21 @@ if (location.search.indexOf('?end=true') > -1) {
 			type: 'info'
 		});
 
-		setTimeout(function() {
+		setTimeout(() => {
 			axios.get('/auth/request')
-				.then(function(response) {
+				.then((response) => {
 					window.location.href = response.data;
-				}).catch(function(error) {
+				}).catch((error) => {
 					console.log(error);
 
-					/*
-					 *swal({
-					 *  title: 'Oops',
-					 *  type: 'error',
-					 *  text: `${jqXHR.status}: ${errorThrown}`,
-					 *  allowEscapeKey: false
-					 *}, function() {
-					 *  window.location.href = '/';
-					 *});
-					 */
+					swal({
+						title: 'Oops',
+						type: 'error',
+						text: `${error.response.status}: ${error.response.data}`
+						allowEscapeKey: false
+					}, () => {
+						window.location.href = '/';
+					});
 				});
 		}, 1500);
 	});
