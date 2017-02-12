@@ -13,9 +13,11 @@ heroku-bash:
 heroku-psql:
 	heroku pg:psql --app sheltered-badlands-26515 DATABASE
 
+# ubuntu 14.04
 port-reroute:
 	sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
 
+# ubuntu 16.10
 port-reroute-new:
 	sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 8080
 
