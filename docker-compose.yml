@@ -1,0 +1,15 @@
+version: '3'
+services:
+  web:
+    image: 'jwoos/pocketistic:latest'
+    ports:
+      - '9000:9000'
+    volumes:
+      - .:/pocketistic/
+    depends_on:
+      - db
+  db:
+    image: 'postgres:9.6'
+    environment:
+      - POSTGRES_DB=pocketistic
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-1234567890}
