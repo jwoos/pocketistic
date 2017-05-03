@@ -1,53 +1,58 @@
 'use strict';
 
-var pattern = Trianglify({
-	height: $('body').height(),
-	width: $('body').width(),
+const body = document.querySelector('body');
+const bodyBoundingClientRect = body.getBoundingClientRect();
+
+const pattern = Trianglify({
+	height: bodyBoundingClientRect.height,
+	width: bodyBoundingClientRect.width,
 	cell_size: 60,
 	variance: '1',
 	x_colors: 'Spectral',
 	y_colors: 'match_x',
 });
 
-$('body').css('background-image', 'url(' + pattern.png() + ')');
-
-$('.skew-button').click(function() {
-	swal({
-		title: 'Redirecting',
-		text: 'You will be redirected to Pocket to sign in',
-		showConfirmButton: false,
-		type: 'info'
-	});
-
-	setTimeout(function() {
-		$.get('/auth/request')
-			.done(function(data) {
-				window.location.href = data;
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				swal({
-					title: 'Oops',
-					type: 'error',
-					text: `${jqXHR.status}: ${errorThrown}`,
-					allowEscapeKey: false
-				}, function() {
-					window.location.href = '/';
-				});
-			});
-	}, 1500);
-});
+body.style.backgroundImage = 'url(' + pattern.png() + ')';
 
 if (location.search.indexOf('?end=true') > -1) {
-	$.get('/auth/access')
-		.done(function() {
+	axios.get('/auth/access')
+		.then(() => {
 			window.location.href = '/';
-		}).fail(function(jqXHR, textStatus, errorThrown) {
+		}).catch((error) => {
 			swal({
 				title: 'Oops',
 				type: 'error',
-				text: `${jqXHR.status}: ${errorThrown}`,
+				text: `${error.response.status}: ${error.response.data}`,
 				allowEscapeKey: false
-			}, function() {
+			}, () => {
 				window.location.href = '/';
 			});
 		});
+} else {
+	document.querySelector('.skew-button').addEventListener('click', () => {
+		swal({
+			title: 'Redirecting',
+			text: 'You will be redirected to Pocket to sign in',
+			showConfirmButton: false,
+			type: 'info'
+		});
+
+		setTimeout(() => {
+			axios.get('/auth/request')
+				.then((response) => {
+					window.location.href = response.data;
+				}).catch((error) => {
+					console.log(error);
+
+					swal({
+						title: 'Oops',
+						type: 'error',
+						text: `${error.response.status}: ${error.response.data}`,
+						allowEscapeKey: false
+					}, () => {
+						window.location.href = '/';
+					});
+				});
+		}, 1500);
+	});
 }
