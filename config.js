@@ -6,7 +6,7 @@ const constants = {
 	apiRequest: '/oauth/request',
 	apiAccess: '/oauth/authorize',
 	apiRedirect: 'https://getpocket.com/auth/authorize',
-	pgConnection: process.env.DATABASE_URL || 'postgres://postgres:123456789@localhost/pocketistic',
+	pgConnection: process.env.DATABASE_URL || 'postgres://postgres:1234567890@db/pocketistic',
 	port: process.env.PORT || 8080,
 	url: process.env.NODE_ENV ? 'https://sheltered-badlands-26515.herokuapp.com' : 'http://dev-server.site',
 	development: {
