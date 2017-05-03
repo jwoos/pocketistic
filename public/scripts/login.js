@@ -47,7 +47,7 @@ if (location.search.indexOf('?end=true') > -1) {
 					swal({
 						title: 'Oops',
 						type: 'error',
-						text: `${error.response.status}: ${error.response.data}`
+						text: `${error.response.status}: ${error.response.data}`,
 						allowEscapeKey: false
 					}, () => {
 						window.location.href = '/';
