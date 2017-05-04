@@ -1,13 +1,13 @@
 version: '3'
 services:
   web:
-    image: 'jwoos/pocketistic:latest'
+    image: 'jwoos/pocketistic-backend:latest'
     ports:
-      - '9000:9000'
+      - '8080:8080'
     volumes:
       - .:/pocketistic/
     depends_on:
-      - db
+      - 'db'
   db:
     image: 'postgres:9.6'
     environment:

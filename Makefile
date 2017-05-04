@@ -1,3 +1,6 @@
+WEB_PID = $(shell docker-compose ps -q web)
+DB_PID = $(shell docker-compose ps -q db)
+
 default:
 	cat Makefile
 
@@ -13,14 +16,6 @@ heroku-bash:
 heroku-psql:
 	heroku pg:psql --app sheltered-badlands-26515 DATABASE
 
-# ubuntu 14.04
-port-reroute:
-	sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
-
-# ubuntu 16.10
-port-reroute-new:
-	sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 8080
-
 migration:
 	sequelize db:migrate --config config.js
 
@@ -32,3 +27,21 @@ generate-migration:
 
 generate-model:
 	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES} --config config.js
+
+build-web:
+	docker build . -t jwoos/pocketistic:latest
+
+docker-migration:
+	docker exec -it ${WEB_PID} bash -c 'make migration'
+
+docker-undo-migration:
+	docker exec -it ${WEB_PID} bash -c 'make undo-migration'
+
+docker-generate-migration:
+	docker exec -it ${WEB_PID} bash -c 'make generate-migration'
+
+docker-generate-model:
+	docker exec -it ${WEB_PID} bash -c 'make generate-model'
+
+docker-psql:
+	docker exec -it ${DB_PID} -U postgres pocketistic
