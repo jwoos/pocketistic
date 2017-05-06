@@ -5,8 +5,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const logger = require('morgan');
-const pug = require('pug');
-const sass = require('node-sass-middleware');
+//const pug = require('pug');
+//const sass = require('node-sass-middleware');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const uuid = require('node-uuid');
@@ -23,9 +23,11 @@ const app = express();
 app.disable('x-powered-by');
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.engine('pug', pug.renderFile);
-app.set('view engine', 'pug');
+/*
+ *app.set('views', path.join(__dirname, 'views'));
+ *app.engine('pug', pug.renderFile);
+ *app.set('view engine', 'pug');
+ */
 
 app.use(logger('dev'));
 
@@ -53,28 +55,30 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-if (app.get('env') === 'development') {
-	app.use(sass({
-		src: path.join(__dirname, 'public'),
-		dest: path.join(__dirname, 'public'),
-		indentedSyntax: false,
-		sourceMap: true,
-		debug: true,
-		outputStyle: 'nested',
-		force: true,
-		response: false
-	}));
-} else {
-	app.use(sass({
-		src: path.join(__dirname, 'public'),
-		dest: path.join(__dirname, 'public'),
-		indentedSyntax: false,
-		sourceMap: false,
-		debug: false,
-		outputStyle: 'compressed',
-		response: false
-	}));
-}
+/*
+ *if (app.get('env') === 'development') {
+ *    app.use(sass({
+ *        src: path.join(__dirname, 'public'),
+ *        dest: path.join(__dirname, 'public'),
+ *        indentedSyntax: false,
+ *        sourceMap: true,
+ *        debug: true,
+ *        outputStyle: 'nested',
+ *        force: true,
+ *        response: false
+ *    }));
+ *} else {
+ *    app.use(sass({
+ *        src: path.join(__dirname, 'public'),
+ *        dest: path.join(__dirname, 'public'),
+ *        indentedSyntax: false,
+ *        sourceMap: false,
+ *        debug: false,
+ *        outputStyle: 'compressed',
+ *        response: false
+ *    }));
+ *}
+ */
 
 app.use(express.static(path.join(__dirname, 'public')));
 
