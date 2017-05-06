@@ -28,8 +28,17 @@ generate-migration:
 generate-model:
 	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES} --config config.js
 
-build-web:
-	docker build . -t jwoos/pocketistic:latest
+build-server:
+	docker build ./docker/server -t jwoos/pocketistic-server:latest
+
+push-server:
+	docker push jwoos/pocketistic-server
+
+build-db:
+	docker build ./docker/db -t jwoos/pocketistic-db:latest
+
+push-db:
+	docker push jwoos/pocketistic-db
 
 docker-migration:
 	docker exec -it ${WEB_PID} bash -c 'make migration'
@@ -44,4 +53,4 @@ docker-generate-model:
 	docker exec -it ${WEB_PID} bash -c 'make generate-model'
 
 docker-psql:
-	docker exec -it ${DB_PID} -U postgres pocketistic
+	docker exec -it ${DB_PID} psql -U postgres pocketistic

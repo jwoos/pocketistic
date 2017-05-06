@@ -26,7 +26,7 @@ const composeDomainGraph = (data) => {
 	});
 }
 
-const composeCountGraph = (data) {
+const composeCountGraph = (data) => {
 	const rcolor = new RColor();
 
 	const chartData = {
@@ -49,7 +49,7 @@ const composeCountGraph = (data) {
 		type: 'pie',
 		data: chartData
 	});
-}
+};
 
 const composeWordCountGraph = (data) => {
 	const rcolor = new RColor();
@@ -74,7 +74,7 @@ const composeWordCountGraph = (data) => {
 		type: 'pie',
 		data: chartData
 	});
-}
+};
 
 let data;
 

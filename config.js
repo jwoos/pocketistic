@@ -10,7 +10,7 @@ const constants = {
 	port: process.env.PORT || 8080,
 	url: process.env.NODE_ENV ? 'https://sheltered-badlands-26515.herokuapp.com' : 'http://dev-server.site',
 	development: {
-		url: 'postgres://postgres:123456789@localhost/pocketistic',
+		url: 'postgres://postgres:1234567890@db/pocketistic',
 		dialect: 'postgres',
 		seeder_storage: 'sequelize'
 	},

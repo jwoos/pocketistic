@@ -2,7 +2,7 @@ FROM phusion/baseimage:0.9.21
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get update && \
-	apt-get install -y make chromium-browser nodejs xvfb && \
+	apt-get install -y make chromium-browser nodejs xvfb postgresql-client && \
 	apt-get upgrade -y && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -10,7 +10,7 @@ RUN apt-get update && \
 ENV PATH="/root/.yarn/bin:${PATH}"
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
-RUN yarn global add sequelize-cli
+RUN yarn global add sequelize-cli sequelize
 RUN yarn install
 
 ENV CHROME_BIN=/usr/bin/chromium-browser

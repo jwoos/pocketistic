@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
-
-host="$1"
-shift
 cmd="$@"
 
-until psql -h "$host" -U "postgres" -c '\l'; do
+until PGPASSWORD=1234567890 psql -h 'db' -U 'postgres' -W -d pocketistic -c '\d'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done
