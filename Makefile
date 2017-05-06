@@ -28,11 +28,11 @@ generate-migration:
 generate-model:
 	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES} --config config.js
 
-build-server:
-	docker build ./docker/server -t jwoos/pocketistic-server:latest
+build-web:
+	docker build ./docker/web -t jwoos/pocketistic-web:latest
 
-push-server:
-	docker push jwoos/pocketistic-server
+push-web:
+	docker push jwoos/pocketistic-web
 
 build-db:
 	docker build ./docker/db -t jwoos/pocketistic-db:latest
