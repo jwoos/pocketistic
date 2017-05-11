@@ -11,9 +11,8 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const uuid = require('node-uuid');
 
-const auth = require('./routes/auth');
-const datahandler = require('./routes/datahandler');
 const index = require('./routes/index');
+const api = require('./routes/api');
 
 const config = require('./config');
 const db = require('./models/index');
@@ -21,13 +20,6 @@ const db = require('./models/index');
 const app = express();
 
 app.disable('x-powered-by');
-
-// view engine setup
-/*
- *app.set('views', path.join(__dirname, 'views'));
- *app.engine('pug', pug.renderFile);
- *app.set('view engine', 'pug');
- */
 
 app.use(logger('dev'));
 
@@ -55,37 +47,11 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-/*
- *if (app.get('env') === 'development') {
- *    app.use(sass({
- *        src: path.join(__dirname, 'public'),
- *        dest: path.join(__dirname, 'public'),
- *        indentedSyntax: false,
- *        sourceMap: true,
- *        debug: true,
- *        outputStyle: 'nested',
- *        force: true,
- *        response: false
- *    }));
- *} else {
- *    app.use(sass({
- *        src: path.join(__dirname, 'public'),
- *        dest: path.join(__dirname, 'public'),
- *        indentedSyntax: false,
- *        sourceMap: false,
- *        debug: false,
- *        outputStyle: 'compressed',
- *        response: false
- *    }));
- *}
- */
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
 app.use('/', index);
-app.use('/auth/', auth);
-app.use('/data/', datahandler);
+app.use('/api/', api);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
