@@ -1,6 +1,6 @@
 import {applyMiddleware, createStore, compose} from 'redux';
 import {combineReducers} from 'redux-immutable';
-import createLogger from 'redux-logger';
+import {createLogger} from 'redux-logger';
 import Immutable from 'immutable';
 
 import reducers from './reducers';
