@@ -9,7 +9,7 @@ const pug = require('pug');
 const sass = require('node-sass-middleware');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
@@ -20,6 +20,10 @@ const db = require('./models/index');
 const app = express();
 
 app.disable('x-powered-by');
+
+app.set('views', path.join(__dirname, 'views'));
+app.engine('pug', pug.renderFile);
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 
@@ -40,10 +44,6 @@ const sess = {
 		maxAge: 60 * 60 * 1000 * 24 * 7 // 7 days
 	}
 };
-
-app.set('views', path.join(__dirname, 'views'));
-app.engine('pug', pug.renderFile);
-app.set('view engine', 'pug');
 
 if (app.get('env') === 'development') {
 	app.use(sass({
