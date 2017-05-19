@@ -1,0 +1,23 @@
+doctype html
+html
+	head
+		title Pocketistic
+		link(rel='stylesheet', href='/stylesheets/vendor/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/vendor/sweetalert.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+	body#login
+		if !end
+			div
+				h1 Pocketistic
+				div.skew-button: div SIGN IN
+		else
+			div
+				div
+					h1 Logging in
+					img(src='/images/ring-alt.svg')
+
+		script(src='/scripts/vendor/axios.min.js')
+		script(src='/scripts/vendor/sweetalert.min.js')
+		script(src='/scripts/vendor/trianglify.min.js')
+		script(src='/scripts/login.js')
