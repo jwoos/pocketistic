@@ -78,7 +78,7 @@ const composeWordCountGraph = (data) => {
 
 let data;
 
-axios.get('/data/').then((response) => {
+axios.get('/api/data/').then((response) => {
 	data = response.data.data;
 
 	composeCountGraph(data);
@@ -93,7 +93,7 @@ axios.get('/data/').then((response) => {
 });
 
 document.querySelector('#update').addEventListener('click', () => {
-	axios.get('/data/raw/update').then((response) => {
+	axios.get('/api/data/raw/update').then((response) => {
 		data = compute(response.data);
 
 		composeCountGraph(data);
