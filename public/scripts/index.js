@@ -43,7 +43,7 @@ const composeCountGraph = (data) => {
 		]
 	};
 
-	const ctx = document.getElementById('count-graph');
+	const ctx = document.getElementById('article-graph');
 	new Chart(ctx, {
 		type: 'pie',
 		data: chartData

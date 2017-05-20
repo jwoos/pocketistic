@@ -20,22 +20,25 @@ html
 					ul.nav.navbar-nav.navbar-right
 						li: a#update(href='#')
 						li: a(href='#') #{username}
-		div.container-fluid
+		div.container-fluid.main
 			div.row
-				div.col-md-12.main
-					div.row
-						div.col-md-6
-							div.card-1#article-count
-								p Article count
-								p Total: {total}
-								p -----------
-								canvas#count-graph
-						div.col-md-6
-							div.card-1#word-count
-								p Word count
-								p Total: {total}
-								p Average per article read: {read_average}
-								canvas#word-graph
+				div.col-md-12
+					div.card-1#article-count
+						p Article count
+						p Total: {total}
+						p -----------
+						canvas#article-graph
+
+			div.row
+				div.col-md-12
+					div.card-1#word-count
+						p Word count
+						p Total: {total}
+						p Average per article read: {read_average}
+						canvas#word-graph
+
+			div.row
+				div.col-md-12
 					canvas#domain-graph
 
 
