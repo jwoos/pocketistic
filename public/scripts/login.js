@@ -31,9 +31,10 @@ if (location.search.indexOf('?end=true') > -1) {
 } else {
 	document.querySelector('.skew-button').addEventListener('click', () => {
 		swal({
+			allowEscapeKey: false,
 			title: 'Redirecting',
 			text: 'You will be redirected to Pocket to sign in',
-			showConfirmButton: false,
+			showConfirmButton: true,
 			type: 'info'
 		});
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const md5 = require('blueimp-md5');
+const hasha = require('hasha');
 const request = require('request');
 
 const config = require('../config');
@@ -82,7 +82,7 @@ const retrieveAccessToken = (requestToken) => {
 						},
 						defaults: {
 							access_token: resolution.accessToken,
-							hash: md5(resolution.username)
+							hash: hasha(resolution.username, {algorithm: 'sha384'})
 						}
 					}).spread((user) => {
 						user.access_token = resolution.accessToken;

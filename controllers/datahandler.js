@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 
-const bluebird = require('bluebird');
 const debug = require('debug')('pocketistic:controller-datahandler');
 const request = require('request');
 
@@ -33,7 +32,7 @@ const retrieveLocalRaw = (user) => {
 		updated: user.raw_update
 	};
 
-	return new bluebird((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		fs.readFile(filePath, 'utf8', (err, data) => {
 			if (err) {
 				resolution.error = err;
@@ -69,7 +68,7 @@ const retrieveLocalParsed = (user) => {
 	}, (err) => {
 		resolution.error = err;
 
-		return bluebird.reject(resolution);
+		return Promise.reject(resolution);
 	});
 };
 
@@ -96,7 +95,7 @@ const retrieveProxy = (user) => {
 		})
 	};
 
-	return new bluebird((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		request(options, (err, res, body) => {
 			if (err) {
 				resolution.error = err;
@@ -118,12 +117,12 @@ const retrieveProxy = (user) => {
 
 const saveRaw = (user, data) => {
 	if (lock.raw[user.username]) {
-		return bluebird.resolve();
+		return Promise.resolve();
 	}
 
 	const filePath = `./user_data/${user.hash}.json`;
 
-	return new bluebird((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		fs.writeFile(filePath, JSON.stringify(data), 'utf8', (err) => {
 			if (err) {
 				reject(err);
@@ -139,7 +138,7 @@ const saveRaw = (user, data) => {
 
 const saveParsed = (user, data) => {
 	if (lock.parsed[user.username]) {
-		return bluebird.resolve();
+		return Promise.resolve();
 	}
 
 	return db.Stat.findOrCreate({
@@ -155,7 +154,7 @@ const saveParsed = (user, data) => {
 
 		user.set('parsed_update', new Date());
 
-		return bluebird.all([
+		return Promise.all([
 			stat.save(),
 			user.save()
 		]);
@@ -223,7 +222,7 @@ const update = (user) => {
 		const data = resolution.data;
 		const parsed = parse(data);
 
-		return bluebird.all([
+		return Promise.all([
 			saveRaw(user, data),
 			saveParsed(user, parsed)
 		]);
@@ -244,7 +243,7 @@ const retrieve = (username, shouldUpdate) => {
 		user = u;
 		resolution.user = user.toJSON();
 
-		let promise = bluebird.resolve();
+		let promise = Promise.resolve();
 
 		if (shouldUpdate || (user.raw_update <= new Date(Date.now() - 2 * 1000 * 60 * 60 * 24))) {
 			promise = update(user);
