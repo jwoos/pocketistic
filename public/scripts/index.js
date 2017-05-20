@@ -1,16 +1,20 @@
 'use strict';
 
-const composeDomainGraph = (data) => {
-	const rcolor = new RColor();
+const generateColor = () => {
+	const col = rcolor().slice(1);
+	return `rgba(${parseInt(col.slice(0, 2), 16)}, ${parseInt(col.slice(2, 4), 16)}, ${parseInt(col.slice(4), 16)}, 0.4)`;
+};
 
+const bindView = (selector, data) => {
+	return rivets.bind(document.querySelector(selector), data);
+};
+
+const composeDomainGraph = (data) => {
 	const chartData = {
 		labels: Object.keys(data),
 		datasets: [
 			{
-				backgroundColor: Array(Object.keys(data).length).fill(0).map(() => {
-					const arr = rcolor.get();
-					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
-				}),
+				backgroundColor: Array(Object.keys(data).length).fill(0).map(generateColor),
 				borderWidth: 1,
 				data: Object.values(data).map((str) => {
 					return Number.parseInt(str);
@@ -27,8 +31,6 @@ const composeDomainGraph = (data) => {
 }
 
 const composeCountGraph = (data) => {
-	const rcolor = new RColor();
-
 	const chartData = {
 		labels: ['unread', 'read'],
 		datasets: [
@@ -36,10 +38,7 @@ const composeCountGraph = (data) => {
 				label: 'article count',
 				data: [data.unread ? data.unread : data.unread_articles, data.read ? data.read : data.read_articles],
 				borderWidth: 1,
-				backgroundColor: Array(2).fill(0).map(() => {
-					const arr = rcolor.get();
-					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
-				})
+				backgroundColor: Array(2).fill(0).map(generateColor)
 			}
 		]
 	};
@@ -52,8 +51,6 @@ const composeCountGraph = (data) => {
 };
 
 const composeWordCountGraph = (data) => {
-	const rcolor = new RColor();
-
 	const chartData = {
 		labels: ['unread', 'read'],
 		datasets: [
@@ -61,10 +58,7 @@ const composeWordCountGraph = (data) => {
 				label: 'word count',
 				data: [data.unreadWords ? data.unreadWords : data.unread_words, data.readWords ? data.readWords : data.read_words],
 				borderWidth: 1,
-				backgroundColor: Array(2).fill(0).map(() => {
-					const arr = rcolor.get();
-					return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.4)`;
-				})
+				backgroundColor: Array(2).fill(0).map(generateColor)
 			}
 		]
 	};
@@ -78,8 +72,22 @@ const composeWordCountGraph = (data) => {
 
 let data;
 
-axios.get('/data/').then((response) => {
+axios.get('/api/data/').then((response) => {
 	data = response.data.data;
+
+	const articleCountView = bindView('#article-count', {
+		total: data.read_articles + data.unread_articles,
+		read: data.read_articles,
+		unread: data.unread_articles
+	});
+
+	const wordCountView = bindView('#word-count', {
+		total: data.read_words + data.unread_words,
+		read_average: data.read_words / data.read_articles,
+		unread_average: data.unread_articles / data.unread_articles,
+		read: data.read_words,
+		unread: data.unread_words
+	});
 
 	composeCountGraph(data);
 	composeWordCountGraph(data);
@@ -93,7 +101,7 @@ axios.get('/data/').then((response) => {
 });
 
 document.querySelector('#update').addEventListener('click', () => {
-	axios.get('/data/raw/update').then((response) => {
+	axios.get('/api/data/raw/update').then((response) => {
 		data = compute(response.data);
 
 		composeCountGraph(data);

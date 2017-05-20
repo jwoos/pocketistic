@@ -1,13 +1,13 @@
 'use strict';
 
-const debug = require('debug')('pocketistic:route-authentication');
 const express = require('express');
 const router = express.Router();
 
 const authentication = require('../controllers/authentication');
+const datahandler = require('../controllers/datahandler');
+const validate = require('../utils/validation');
 
-// authentication endpoints
-router.get('/request', (req, res) => {
+router.get('/auth/request', (req, res) => {
 	const sess = req.session;
 
 	authentication.retrieveRequestToken().then((resolution) => {
@@ -21,13 +21,11 @@ router.get('/request', (req, res) => {
 	}, (e) => {
 		res.status(502).send(e);
 	}).catch((e) => {
-		debug(e);
-
 		res.status(500).send('Error try again later!');
 	});
 });
 
-router.get('/access', (req, res) => {
+router.get('/auth/access', (req, res) => {
 	const sess = req.session;
 
 	authentication.retrieveAccessToken(sess.requestToken).then((resolution) => {
@@ -42,9 +40,37 @@ router.get('/access', (req, res) => {
 	}, (e) => {
 		res.status(502).send(e);
 	}).catch((e) => {
-		debug(e);
-
 		res.status(500).send('Error try again later!');
+	});
+});
+
+router.get('/data', (req, res) => {
+	if (!validate.validateRequest(req)) {
+		return res.status(401).send('Unauthorized request');
+	}
+
+	const username = req.session.username;
+	const config = {};
+
+	datahandler.retrieve(username, false, config).then((resolution) => {
+		res.send(resolution);
+	}).catch((e) => {
+		res.status(500).send('Server error');
+	});
+});
+
+router.get('/data/update', (req, res) => {
+	if (!validate.validateRequest(req)) {
+		return res.status(401).send('Unauthorized request');
+	}
+
+	const username = req.session.username;
+	const config = {};
+
+	datahandler.retrieve(username, true, config).then((resolution) => {
+		res.send(resolution);
+	}).catch((e) => {
+		res.status(500).send('Server error');
 	});
 });
 
