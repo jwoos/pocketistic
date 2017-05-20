@@ -15,7 +15,7 @@ const pattern = Trianglify({
 body.style.backgroundImage = 'url(' + pattern.png() + ')';
 
 if (location.search.indexOf('?end=true') > -1) {
-	axios.get('/auth/access')
+	axios.get('/api/auth/access')
 		.then(() => {
 			window.location.href = '/';
 		}).catch((error) => {
@@ -38,7 +38,7 @@ if (location.search.indexOf('?end=true') > -1) {
 		});
 
 		setTimeout(() => {
-			axios.get('/auth/request')
+			axios.get('/api/auth/request')
 				.then((response) => {
 					window.location.href = response.data;
 				}).catch((error) => {
