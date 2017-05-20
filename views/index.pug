@@ -25,22 +25,23 @@ html
 				div.col-md-12.main
 					div.row
 						div.col-md-6
-							div.card-1
+							div.card-1#article-count
 								p Article count
-								p Total: {data.total}
+								p Total: {total}
 								p -----------
 								canvas#count-graph
 						div.col-md-6
-							div.card-1
+							div.card-1#word-count
 								p Word count
-								p Total: {data.wordCount}
-								p Average per article: {data.averageWordCount}
+								p Total: {total}
+								p Average per article read: {read_average}
 								canvas#word-graph
 					canvas#domain-graph
 
 
 	script(src='/scripts/vendor/axios.min.js')
 	script(src='/scripts/vendor/sweetalert.min.js')
-	script(src='/scripts/vendor/chart.min.js')
-	script(src='/scripts/vendor/rcolor.js')
+	script(src='/scripts/vendor/Chart.min.js')
+	script(src='/scripts/vendor/rcolor.min.js')
+	script(src='/scripts/vendor/rivets.bundled.min.js')
 	script(src='/scripts/index.js')

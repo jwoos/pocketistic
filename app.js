@@ -9,11 +9,10 @@ const pug = require('pug');
 const sass = require('node-sass-middleware');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
-const auth = require('./routes/auth');
-const datahandler = require('./routes/datahandler');
 const index = require('./routes/index');
+const api = require('./routes/api');
 
 const config = require('./config');
 const db = require('./models/index');
@@ -22,7 +21,6 @@ const app = express();
 
 app.disable('x-powered-by');
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('pug', pug.renderFile);
 app.set('view engine', 'pug');
@@ -47,12 +45,6 @@ const sess = {
 	}
 };
 
-app.use(session(sess));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-	extended: false
-}));
-
 if (app.get('env') === 'development') {
 	app.use(sass({
 		src: path.join(__dirname, 'public'),
@@ -76,12 +68,17 @@ if (app.get('env') === 'development') {
 	}));
 }
 
+app.use(session(sess));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: false
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
 app.use('/', index);
-app.use('/auth/', auth);
-app.use('/data/', datahandler);
+app.use('/api/', api);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
