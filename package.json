@@ -25,6 +25,7 @@
     "pug": "2.0.0-rc.1",
     "rcolor": "^1.0.1",
     "request": "2.81.x",
+    "rivets": "^0.9.6",
     "sequelize": "3.30.x",
     "sequelize-cli": "2.7.x",
     "serve-favicon": "2.4.x",
