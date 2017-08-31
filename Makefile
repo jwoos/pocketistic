@@ -29,13 +29,13 @@ generate-model:
 	sequelize model:create --name ${NAME} --attributes ${ATTRIBUTES} --config config.js
 
 build-web:
-	docker build ./docker/web -t jwoos/pocketistic-web:latest
+	docker-compose build -t jwoos/pocketistic-web:latest
 
 push-web:
 	docker push jwoos/pocketistic-web
 
 build-db:
-	docker build ./docker/db -t jwoos/pocketistic-db:latest
+	docker-compose build -t jwoos/pocketistic-db:latest
 
 push-db:
 	docker push jwoos/pocketistic-db
